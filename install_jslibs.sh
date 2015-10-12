@@ -109,4 +109,14 @@ cat >/etc/apache2/sites-enabled/000-default.conf <<"EOF"
    CustomLog /var/log/apache2/access.log combined
 </VirtualHost>
 EOF
+cat >/var/www/html/index.html <<"EOF"
+<html>
+ <head>
+  <title>SDI4Apps platform</title>
+ </head>
+ <body>
+  <h1>SDI4Apps platform</h1>
+ </body>
+</html>
+EOF
 service apache2 restart
