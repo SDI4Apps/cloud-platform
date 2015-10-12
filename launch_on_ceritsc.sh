@@ -1,10 +1,10 @@
 #!/bin/bash
 
-USER_DATA_FILE=/home/makub/sdi4apps/kontext/test_user_data.yaml
+USER_DATA_FILE=user-data.yaml
 CONTEXT_FILE=/tmp/ctx.$$
 TEMPLATE_ID=2941
 
-echo "starting virtual image OpenNebula using custom user-data"
+echo "starting virtual image in OpenNebula using custom user-data from file $USER_DATA_FILE"
 
 if [ ! -f "$USER_DATA_FILE" ] ; then
   echo "file $USER_DATA_FILE not found"
