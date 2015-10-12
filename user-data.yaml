@@ -14,7 +14,7 @@ write_files:
 #add software repositories
 apt_sources:
   - source: "ppa:webupd8team/java"    # Oracle Java PPA
-  - source: "ppa:ppa:ubuntugis/ubuntugis-unstable" # UbuntuGIS PPA
+  - source: "ppa:ubuntugis/ubuntugis-unstable" # UbuntuGIS PPA
   - source: 'deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main' # PostgreSQL latest repository
     filename: pgdg.list
     key: |
@@ -103,7 +103,6 @@ packages:
   - git
   - libapache2-mod-php5
   - libapache2-mod-python 
-  - mongodb-org 
   - nodejs 
   - npm 
   - php5 
