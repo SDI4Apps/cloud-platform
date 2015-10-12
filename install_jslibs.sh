@@ -16,15 +16,16 @@ tar xJf proj4js-20151012.tar.xz
 
 svn co --quiet svn://bnhelp.cz/hslayers/branches/hslayers-3.5
 cd hslayers-3.5/tools
-python build.py -rpica
+python build.py -rpica >/dev/null 2>&1
 
 cd /data/wwwlibs
-git clone http://git.ccss.cz/hsrs/hslayers-ng.git
+git clone --quiet http://git.ccss.cz/hsrs/hslayers-ng.git
 ln -s /usr/bin/nodejs /usr/bin/node
 cat >/root/.bowerrc <<"EOF"
 {"interactive": false}
 EOF
 cd hslayers-ng
+sed -i -e 's/bower --allow-root/bower --allow-root --quiet/' package.json
 npm config set loglevel warn
 npm install --unsafe-perm
 
