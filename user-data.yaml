@@ -125,16 +125,10 @@ packages:
   - rsync 
   - subversion 
   - wget
-#  - mc
 #  - zip
 #  - p7zip
 #  - p7zip-full
 #  - lzma
-#  - apache2
-#  - apache2-mpm-prefork
-#  - cronolog
-#  - postgresql-9.4-postgis-2.1
-#  - cgi-mapserver
 #debug log for runcmd
 output : { all : '| tee -a /var/log/cloud-init-output.log' }
 #create some users
@@ -151,5 +145,9 @@ users:
 #aad the following ssh keys to the first specified user
 ssh_authorized_keys:
   - ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAtv24kBxvFCiDAUxQvsYEaIoWdU+QVgcWU1q4uJ8Ngy+LKn6XIVQTKlWd9W7MPUgpL5jPHVgExN1vpH+UlS0cducDUCRVB3JU4fW8jXge/JEhqhfrwKMD/iE0DJ0k2Zxd8pyIway1Q2KYs5tqQTJcQX3FsJ2V86pDFeLYmisRTFbo4n0wog20euPYCuTAY0KlA8mkOb/WXUcLICgT3O6Tvp9Vyez1P1eHT1DW7dkeu5hqal08raXNGwF9+xvo2oHzstTSHl/juXS+gmiI1Y4VqRiR0C6Euy/MBX4ywyOi/Fm8r9qxcvYaULsy/k8KudNjipL5KQxd/xKpw2Azs7fbbw== makub@acrab.ics.muni.cz
+# run some commands
+runcmd:
+ - 'wget --quiet https://raw.githubusercontent.com/SDI4Apps/cloud-platform/master/install_jslibs.sh -O /tmp/install_jslibs.sh'
+ - 'bash /tmp/install_jslibs.sh'
 #final message
 final_message: "The system is finally up, after $UPTIME seconds"

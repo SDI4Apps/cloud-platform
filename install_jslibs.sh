@@ -25,7 +25,7 @@ cat >/root/.bowerrc <<"EOF"
 {"interactive": false}
 EOF
 cd hslayers-ng
-sed -i -e 's/bower --allow-root/bower --allow-root --quiet/' package.json
+sed -i -e 's/bower --allow-root/bower --allow-root --silent/' package.json
 npm config set loglevel warn
 npm install --unsafe-perm
 
