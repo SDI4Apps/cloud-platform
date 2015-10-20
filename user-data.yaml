@@ -130,7 +130,7 @@ packages:
 #  - p7zip-full
 #  - lzma
 #debug log for runcmd
-output : { all : '| tee -a /var/log/cloud-init-output.log' }
+#output : { all : '| tee -a /var/log/cloud-init-output.log' }
 #create some users
 users:
   #creates default user named "ubuntu" (as specified in /etc/cloud/cloud.cfg)
