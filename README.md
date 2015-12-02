@@ -12,7 +12,7 @@ click on **Advanced Details**, then in the section **User Data** click **As file
 
 ## Google Computing Engine
 
-Must be submitted from command line. Install Google Cloud tools.
+Must be submitted from command line. Install Google Cloud tools from [repository](https://cloud.google.com/sdk/#debubu).
 
 Download the files user-data.yaml and launch_on_google_ce.sh, run the script.
 
