@@ -31,4 +31,4 @@ cat >>$CONTEXT_FILE <<EOF
 "
 ]
 EOF
-onetemplate instantiate --name  sdi4apps-$(date '+%Y%m%d%H%M%S') -v $TEMPLATE_ID $CONTEXT_FILE
+onetemplate instantiate --verbose --name  sdi4apps-$(date '+%Y%m%d%H%M%S') -v $TEMPLATE_ID $CONTEXT_FILE

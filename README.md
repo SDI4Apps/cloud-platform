@@ -12,12 +12,63 @@ click on **Advanced Details**, then in the section **User Data** click **As file
 
 ## Google Computing Engine
 
-Must be submitted from command line. Install Google Cloud tools from [repository](https://cloud.google.com/sdk/#debubu).
+Must be submitted from command line. 
 
 Download the files user-data.yaml and launch_on_google_ce.sh, run the script.
 
+### Setup for Google Computing Engine
+
+Install Google Cloud tools from [repository](https://cloud.google.com/sdk/#debubu). On a Ubuntu 14.04 box, do the following:
+```
+sudo su -
+export CLOUD_SDK_REPO=cloud-sdk-`lsb_release -c -s`
+curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+echo "deb http://packages.cloud.google.com/apt $CLOUD_SDK_REPO main" > /etc/apt/sources.list.d/google-cloud-sdk.list
+apt-get update 
+apt-get install google-cloud-sdk
+exit
+gcloud init
+```
+Set up authentication by running the following command:
+```
+gcloud auth login
+```
+
 ## CERIT-SC OpenNebula
 
-Must be submitted from command line. Install package **opennebula-tools** from [repository](http://docs.opennebula.org/4.10/design_and_installation/quick_starts/qs_ubuntu_kvm.html#install-the-repo).
+Must be submitted from command line. 
 
 Download the files user-data.yaml and launch_on_ceritsc.sh, run the script.
+
+### Setup for CERIT-SC OpenNebula
+
+Install package **opennebula-tools** from [repository](http://docs.opennebula.org/4.10/design_and_installation/quick_starts/qs_ubuntu_kvm.html#install-the-repo). On a Ubuntu 14.04 box, do the following:
+```
+sudo su -
+wget -q -O- http://downloads.opennebula.org/repo/Ubuntu/repo.key | apt-key add -
+echo "deb http://downloads.opennebula.org/repo/4.10/Ubuntu/14.04/ stable opennebula" > /etc/apt/sources.list.d/opennebula.list
+apt-get update
+apt-get install opennebula-tools
+exit
+```
+
+Then you have to set up authentication. You will need an X509 digital certificate from an IGTF-approved certification authority
+ imported in your browser for that.
+* register your digital certificate at [Perun account management](https://perun.metacentrum.cz/perun-identity-consolidator-krb/)
+* export that certificate and its private key from your browser into a file, named e.g. *mycreds.p12*
+* create an OpenNebula access token from the certificate using the following commands:
+```
+# extracts the public certificate into file usercert.pem
+openssl pkcs12 -in mycreds.p12 -out usercert.pem -clcerts -nokeys 
+# extract the private key userkey.pem
+openssl pkcs12 -in mycreds.p12 -out userkey.pem -nocerts -nodes  
+# generates Opennebula access token
+oneuser login -v $LOGNAME --x509 --cert usercert.pem --key userkey.pem --force
+```
+* add the following at the end of your *~/.bashrc* file:
+```
+#env vars for OpenNebula tools
+export ONE_HOST=https://cloud.metacentrum.cz
+export ONE_AUTH=~/.one/one_x509
+export ONE_XMLRPC=$ONE_HOST:6443/RPC2
+```
