@@ -11,6 +11,9 @@ write_files:
        |____/|____/___|  |_|/_/   \_\  __/|  __/|___/
                                     |_|   |_|
 
+       SDI4Apps platform installation is in progress now. Please wait.
+       It takes approximately 850 seconds.
+
 #add software repositories
 apt_sources:
   - source: "ppa:webupd8team/java"    # Oracle Java PPA
@@ -92,28 +95,29 @@ bootcmd:
   - 'echo oracle-java7-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections'
 #install these packages
 packages:
-  - ntp
-  - htop
-  - oracle-java7-installer
-  - oracle-java7-set-default
-  - oracle-java7-unlimited-jce-policy
   - apache2-mpm-prefork 
+  - awstats
   - cgi-mapserver 
   - gdal-bin 
   - git
+  - htop
   - libapache2-mod-php5
   - libapache2-mod-python 
   - nodejs 
   - npm 
+  - ntp
+  - oracle-java7-installer
+  - oracle-java8-installer
+  - oracle-java7-unlimited-jce-policy
+  - oracle-java8-unlimited-jce-policy
+  - oracle-java7-set-default
   - php5 
   - php5-curl 
   - php5-mysql 
   - php5-pgsql 
   - php5-sqlite 
   - php5-xsl
-  - postgresql 
-  - postgresql-9.4-postgis-2.1 
-  - postgresql-9.4-postgis-2.1-scripts
+  - postgis
   - python-cssutils 
   - python-html5lib 
   - python-httplib2 
@@ -124,6 +128,8 @@ packages:
   - python-webpy 
   - rsync 
   - subversion 
+  - tomcat7
+  - tomcat7-user
   - wget
 #  - zip
 #  - p7zip

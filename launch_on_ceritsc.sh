@@ -4,6 +4,14 @@ USER_DATA_FILE=user-data.yaml
 CONTEXT_FILE=/tmp/ctx.$$
 TEMPLATE_ID=2941
 
+if [ ! -f .one/one_auth ] ;then
+ echo "Authentication token for OpenNebula not found, create it using the following command "
+ echo "in the directory with your X509 certificated and its private key:"
+ echo
+ echo  "oneuser login -v $LOGNAME --x509 --cert usercert.pem --key userkey.pem --force"
+ exit 1 
+fi
+
 echo "starting virtual image in OpenNebula using custom user-data from file $USER_DATA_FILE"
 
 if [ ! -f "$USER_DATA_FILE" ] ; then
