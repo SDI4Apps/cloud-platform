@@ -2,7 +2,11 @@
 
 USER_DATA_FILE=user-data.yaml
 CONTEXT_FILE=/tmp/ctx.$$
-TEMPLATE_ID=2941
+TEMPLATE_ID=3472
+
+export ONE_HOST=https://cloud.metacentrum.cz
+export ONE_AUTH=~/.one/one_x509
+export ONE_XMLRPC=$ONE_HOST:6443/RPC2
 
 if [ ! -f ~/.one/one_auth ] ;then
  echo "Authentication token for OpenNebula not found, create it using the following command "

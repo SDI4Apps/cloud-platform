@@ -1,27 +1,48 @@
 #!/bin/bash
 
 
-mkdir -p /data/wwwlibs
+mkdir -p /data/wwwlibs/jquery /data/www/py /data/www/php /data/www/cgi-bin /data/www/wwwlibs
 cd /data/wwwlibs
 wget --quiet http://cdn.sencha.com/ext/gpl/ext-3.4.1.1-gpl.zip
 wget --quiet http://cdn.sencha.com/ext/gpl/ext-4.2.1-gpl.zip
-wget --quiet http://packages.sdi4apps.eu/hsproxy-20151012.tar.xz
-wget --quiet http://packages.sdi4apps.eu/proxy4ows-20151012.tar.xz
-wget --quiet http://packages.sdi4apps.eu/proj4js-20151012.tar.xz
+wget --quiet http://packages.sdi4apps.eu/hsproxy.tar.xz
+wget --quiet http://packages.sdi4apps.eu/proxy4ows.tar.xz
+wget --quiet http://packages.sdi4apps.eu/proj4js.tar.xz
+wget --quiet http://packages.sdi4apps.eu/css.tar.xz
+wget --quiet http://packages.sdi4apps.eu/js.tar.xz
+wget --quiet http://packages.sdi4apps.eu/statusmanager.tar.xz
+wget --quiet http://packages.sdi4apps.eu/metadata.tar.xz
 wget --quiet https://github.com/jezekjan/webglayer/releases/download/v1.0.1/webglayer-1.0.1.zip
+#JS libs in /data/wwwlibs
 unzip -o -q ext-3.4.1.1-gpl.zip
 unzip -o -q ext-4.2.1-gpl.zip
-unzip -o -q webglayer-1.0.1.zip
-tar xJf hsproxy-20151012.tar.xz
-tar xJf proxy4ows-20151012.tar.xz
-tar xJf proj4js-20151012.tar.xz
+tar xJf hsproxy.tar.xz
+tar xJf proxy4ows.tar.xz
+tar xJf proj4js.tar.xz
+tar xJf statusmanager.tar.xz
+cd /data/www
+tar xJf css.tar.xz
+tar xJf js.tar.xz
+cd /data/wwwlibs/jquery
+wget --quiet http://code.jquery.com/jquery-1.12.0.min.js
 
+#HS Layers
+cd /data/wwwlibs
 svn co --quiet svn://bnhelp.cz/hslayers/branches/hslayers-3.5
 cd hslayers-3.5/tools
 python build.py -rpica >/dev/null 2>&1
 
+#LayMan
+cd /data/www/py
+git clone --quiet https://github.com/CCSS-CZ/layman
+
+#MICKA
+cd /data/www/php
+tar xJf /data/wwwlibs/metadata.tar.xz
+
+#HS Layers NG
 cd /data/wwwlibs
-git clone --quiet http://git.ccss.cz/hsrs/hslayers-ng.git
+git clone --quiet https://github.com/hslayers/hslayers-ng.git
 ln -s /usr/bin/nodejs /usr/bin/node
 cat >/root/.bowerrc <<"EOF"
 {"interactive": false}
@@ -30,6 +51,26 @@ cd hslayers-ng
 sed -i -e 's/bower --allow-root/bower --allow-root --silent/' package.json
 npm config set loglevel warn
 npm install --unsafe-perm
+
+# well known URLs
+cd /data/www/wwwlibs
+ln -s /data/wwwlibs/ext-3.4.1 ext
+ln -s /data/wwwlibs/ext-4.2.1.883 ext4
+ln -s /data/wwwlibs/hslayers-3.5/build hslayers
+ln -s /data/wwwlibs/hslayers-ng hslayers-ng
+ln -s /data/wwwlibs/hsproxy hsproxy
+ln -s /data/wwwlibs/jquery jquery
+ln -s /data/wwwlibs/proj4js proj4js
+ln -s /data/wwwlibs/proxy4ows proxy4ows
+ln -s /data/wwwlibs/statusmanager statusmanager
+cd /data/www/cgi-bin
+ln -s ../wwwlibs/hsproxy/lib/hsproxy.py hsproxy.cgi
+ln -s ../py/layman/server/layman.py layman
+ln -s /usr/lib/cgi-bin/mapserv mapserv
+ln -s ../wwwlibs/proxy4ows/proxy4ows.cgi proxy4ows.cgi
+cd /data/www/php
+ln -s /usr/share/phppgadmin pma #phpPgAdmin
+
 
 # prepare Apache
 a2enmod ssl rewrite proxy_ajp proxy_http headers cgi python 
@@ -120,38 +161,43 @@ cat >/var/www/html/index.html <<"EOF"
  </body>
 </html>
 EOF
+#SSL cert from LetsEncrypt https://letsencrypt.readthedocs.org/en/latest/intro.html
+git clone https://github.com/letsencrypt/letsencrypt /opt/letsencrypt
+cd /opt/letsencrypt
+./letsencrypt-auto --apache --email test@liferay.com --agree-tos -d $(hostname -f)
+
 service apache2 restart
 
 #Tomcat
-su ubuntu tomcat7-instance-create /home/ubuntu/tomcat7
-cat >/home/ubuntu/tomcat7/conf/server.xml <<"EOF"
-<?xml version='1.0' encoding='utf-8'?>
-<Server port="8006" shutdown="SHUTDOWN">
-  <Listener className="org.apache.catalina.core.JasperListener" />
-  <Listener className="org.apache.catalina.core.JreMemoryLeakPreventionListener" />
-  <Listener className="org.apache.catalina.mbeans.GlobalResourcesLifecycleListener" />
-  <Listener className="org.apache.catalina.core.ThreadLocalLeakPreventionListener" />
-  <GlobalNamingResources>
-    <Resource name="UserDatabase" auth="Container"
-              type="org.apache.catalina.UserDatabase"
-              description="User database that can be updated and saved"
-              factory="org.apache.catalina.users.MemoryUserDatabaseFactory"
-              pathname="conf/tomcat-users.xml" />
-  </GlobalNamingResources>
-  <Service name="Catalina">
-    <Connector port="8010" protocol="AJP/1.3" redirectPort="8443" 
-      URIEncoding="UTF-8" address="127.0.0.1" useBodyEncodingForURI="true" tomcatAuthentication="false"/>
-    <Engine name="Catalina" defaultHost="localhost">
-      <Realm className="org.apache.catalina.realm.LockOutRealm">
-        <Realm className="org.apache.catalina.realm.UserDatabaseRealm" resourceName="UserDatabase"/>
-      </Realm>
-      <Host name="localhost"  appBase="webapps" unpackWARs="true" autoDeploy="true"></Host>
-    </Engine>
-  </Service>
-</Server>
-EOF
-mkdir -p /usr/share/tomcat7/common/classes /usr/share/tomcat7/server/classes /usr/share/tomcat7/shared/classes
-su ubuntu /home/ubuntu/tomcat7/bin/startup.sh
+#su ubuntu tomcat7-instance-create /home/ubuntu/tomcat7
+#cat >/home/ubuntu/tomcat7/conf/server.xml <<"EOF"
+#<?xml version='1.0' encoding='utf-8'?>
+#<Server port="8006" shutdown="SHUTDOWN">
+#  <Listener className="org.apache.catalina.core.JasperListener" />
+#  <Listener className="org.apache.catalina.core.JreMemoryLeakPreventionListener" />
+#  <Listener className="org.apache.catalina.mbeans.GlobalResourcesLifecycleListener" />
+#  <Listener className="org.apache.catalina.core.ThreadLocalLeakPreventionListener" />
+#  <GlobalNamingResources>
+#    <Resource name="UserDatabase" auth="Container"
+#              type="org.apache.catalina.UserDatabase"
+#              description="User database that can be updated and saved"
+#              factory="org.apache.catalina.users.MemoryUserDatabaseFactory"
+#              pathname="conf/tomcat-users.xml" />
+#  </GlobalNamingResources>
+#  <Service name="Catalina">
+#    <Connector port="8010" protocol="AJP/1.3" redirectPort="8443" 
+#      URIEncoding="UTF-8" address="127.0.0.1" useBodyEncodingForURI="true" tomcatAuthentication="false"/>
+#    <Engine name="Catalina" defaultHost="localhost">
+#      <Realm className="org.apache.catalina.realm.LockOutRealm">
+#        <Realm className="org.apache.catalina.realm.UserDatabaseRealm" resourceName="UserDatabase"/>
+#      </Realm>
+#      <Host name="localhost"  appBase="webapps" unpackWARs="true" autoDeploy="true"></Host>
+#    </Engine>
+#  </Service>
+#</Server>
+#EOF
+#mkdir -p /usr/share/tomcat7/common/classes /usr/share/tomcat7/server/classes /usr/share/tomcat7/shared/classes
+#su ubuntu /home/ubuntu/tomcat7/bin/startup.sh
 
 #Liferay DB
 cd /home/ubuntu
@@ -167,6 +213,20 @@ su postgres -c "psql -f /home/ubuntu/liferaydb.sql"
 wget 'https://acrab.ics.muni.cz/~makub/sdi4apps/liferay-portal-6.2-ce-ga6.tar.xz'
 tar xJf liferay-portal-6.2-ce-ga6.tar.xz
 su - ubuntu -c "/home/ubuntu/liferay-portal-6.2-ce-ga6/tomcat-7.0.62/bin/startup.sh"
+#portlets
+cat >/home/ubuntu/deploy_portlets.sh <<"EOF"
+cd ~
+git clone --quiet https://github.com/SDI4Apps/liferay
+cd liferay
+sed -i -e 's#app.server.tomcat.dir=${app.server.parent.dir}/tomcat-7.0.42#app.server.tomcat.dir=/home/ubuntu/liferay-portal-6.2-ce-ga6/tomcat-7.0.62#' build.properties
+cd portlets ; ant war ; cd ..
+cd hooks ; ant war ; cd ..
+cd themes ; ant war ; cd ..
+cd dist
+cp * ~/liferay-portal-6.2-ce-ga6/deploy/
+EOF
+chmod a+x /home/ubuntu/deploy_portlets.sh
+su - ubuntu -c "/home/ubuntu/deploy_portlets.sh"
 
 
 cat >/etc/motd <<"EOF"
@@ -188,6 +248,9 @@ cat >/etc/motd <<"EOF"
        - Liferay 6.2 GA6
        - HSProxy 
        - proxy4ows
+       - Statusmanager
+       - LayMan
+       - phpPgAdmin
        - JavaScript libraries
          - ExtJS 3.4.1
          - ExtJS 4.2.1

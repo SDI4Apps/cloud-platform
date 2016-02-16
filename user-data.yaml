@@ -103,21 +103,20 @@ bootcmd:
   - 'echo postfix postfix/mailname string  $(hostname -f) | /usr/bin/debconf-set-selections'
 #install these packages
 packages:
+  - ant
   - apache2-mpm-prefork 
-  - awstats
   - cgi-mapserver 
   - gdal-bin 
   - git
   - htop
   - libapache2-mod-php5
   - libapache2-mod-python 
+  - mailutils
   - nodejs 
   - npm 
   - ntp
   - oracle-java7-installer
-  - oracle-java8-installer
   - oracle-java7-unlimited-jce-policy
-  - oracle-java8-unlimited-jce-policy
   - oracle-java7-set-default
   - php5 
   - php5-curl 
@@ -125,6 +124,7 @@ packages:
   - php5-pgsql 
   - php5-sqlite 
   - php5-xsl
+  - phppgadmin
   - postgis
   - postfix
   - python-cssutils 
@@ -140,12 +140,6 @@ packages:
   - tomcat7
   - tomcat7-user
   - wget
-#  - zip
-#  - p7zip
-#  - p7zip-full
-#  - lzma
-#debug log for runcmd
-#output : { all : '| tee -a /var/log/cloud-init-output.log' }
 #create some users
 users:
   #creates default user named "ubuntu" (as specified in /etc/cloud/cloud.cfg)
@@ -160,7 +154,7 @@ users:
 #aad the following ssh keys to the first specified user
 ssh_authorized_keys:
   - ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAtv24kBxvFCiDAUxQvsYEaIoWdU+QVgcWU1q4uJ8Ngy+LKn6XIVQTKlWd9W7MPUgpL5jPHVgExN1vpH+UlS0cducDUCRVB3JU4fW8jXge/JEhqhfrwKMD/iE0DJ0k2Zxd8pyIway1Q2KYs5tqQTJcQX3FsJ2V86pDFeLYmisRTFbo4n0wog20euPYCuTAY0KlA8mkOb/WXUcLICgT3O6Tvp9Vyez1P1eHT1DW7dkeu5hqal08raXNGwF9+xvo2oHzstTSHl/juXS+gmiI1Y4VqRiR0C6Euy/MBX4ywyOi/Fm8r9qxcvYaULsy/k8KudNjipL5KQxd/xKpw2Azs7fbbw== makub@acrab.ics.muni.cz
-# run some commands
+# run script that installs SDI4Apps software
 runcmd:
  - 'wget --quiet https://raw.githubusercontent.com/SDI4Apps/cloud-platform/master/install_jslibs.sh -O /tmp/install_jslibs.sh'
  - 'bash /tmp/install_jslibs.sh'
