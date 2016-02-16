@@ -164,7 +164,7 @@ EOF
 #SSL cert from LetsEncrypt https://letsencrypt.readthedocs.org/en/latest/intro.html
 git clone https://github.com/letsencrypt/letsencrypt /opt/letsencrypt
 cd /opt/letsencrypt
-./letsencrypt-auto --apache --email test@liferay.com --agree-tos --redirect -d $(hostname -f)
+./letsencrypt-auto --apache --email test@liferay.com --agree-tos --no-redirect -d $(hostname -f)
 
 service apache2 restart
 
@@ -219,7 +219,7 @@ cd ~
 git clone --quiet https://github.com/SDI4Apps/liferay
 cd liferay
 sed -i -e 's#app.server.tomcat.dir=${app.server.parent.dir}/tomcat-7.0.42#app.server.tomcat.dir=/home/ubuntu/liferay-portal-6.2-ce-ga6/tomcat-7.0.62#' build.properties
-cd portlets ; ant war ; cd ..
+cd portlets ; ant war ; ant war ; cd ..
 cd hooks ; ant war ; cd ..
 cd themes ; ant war ; cd ..
 cd dist
@@ -242,7 +242,7 @@ cat >/etc/motd <<"EOF"
        - PostgreSQL 9.5
        - PostGIS 
        - Apache 2.4 + PHP 
-       - Oracle Java 7 and 8
+       - Oracle Java 7
        - Tomcat 7
        - MapServer
        - Liferay 6.2 GA6
