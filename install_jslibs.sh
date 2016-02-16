@@ -165,7 +165,7 @@ su postgres -c "psql -f /home/ubuntu/liferaydb.sql"
 #Liferay server
 #wget -O liferay-portal-tomcat-6.2-ce-ga6-20160112152609836.zip http://sourceforge.net/projects/lportal/files/Liferay%20Portal/6.2.5%20GA6/liferay-portal-tomcat-6.2-ce-ga6-20160112152609836.zip/download
 wget 'https://acrab.ics.muni.cz/~makub/sdi4apps/liferay-portal-6.2-ce-ga6.tar.xz'
-tar xzJ liferay-portal-6.2-ce-ga6.tar.xz
+tar xJf liferay-portal-6.2-ce-ga6.tar.xz
 su - ubuntu -c "/home/ubuntu/liferay-portal-6.2-ce-ga6/tomcat-7.0.62/bin/startup.sh"
 
 
@@ -195,4 +195,5 @@ cat >/etc/motd <<"EOF"
          - HSLayers 3.5
          - HSLayers NG
          - WebGLayer
+
 EOF

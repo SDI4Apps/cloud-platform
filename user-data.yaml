@@ -12,7 +12,12 @@ write_files:
                                     |_|   |_|
 
        SDI4Apps platform installation is in progress now. Please wait.
-       It takes approximately 850 seconds.
+       It takes approximately 10 minutes. You can watch the progress
+       by issuing the following command:
+
+       tail -f /var/log/cloud-init-output.log
+
+       and wait for the following line to appear: "The SDI4Apps platform installation was completed"
 
 #add software repositories
 apt_sources:
@@ -91,8 +96,11 @@ apt_sources:
 apt_update: True
 #apt_upgrade: True
 # Agreement with Oracle licence before packages are installed
+# setting up Postfix SMTP server for outgoing email
 bootcmd:
   - 'echo oracle-java7-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections'
+  - 'echo postfix postfix/main_mailer_type select Internet Site | /usr/bin/debconf-set-selections'
+  - 'echo postfix postfix/mailname string  $(hostname -f) | /usr/bin/debconf-set-selections'
 #install these packages
 packages:
   - apache2-mpm-prefork 
@@ -118,6 +126,7 @@ packages:
   - php5-sqlite 
   - php5-xsl
   - postgis
+  - postfix
   - python-cssutils 
   - python-html5lib 
   - python-httplib2 
@@ -156,4 +165,4 @@ runcmd:
  - 'wget --quiet https://raw.githubusercontent.com/SDI4Apps/cloud-platform/master/install_jslibs.sh -O /tmp/install_jslibs.sh'
  - 'bash /tmp/install_jslibs.sh'
 #final message
-final_message: "The system is finally up, after $UPTIME seconds"
+final_message: "The SDI4Apps platform installation was completed after $UPTIME seconds"
