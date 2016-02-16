@@ -21,8 +21,8 @@ tar xJf proxy4ows.tar.xz
 tar xJf proj4js.tar.xz
 tar xJf statusmanager.tar.xz
 cd /data/www
-tar xJf css.tar.xz
-tar xJf js.tar.xz
+tar xJf /data/wwwlibs/css.tar.xz
+tar xJf /data/wwwlibs/js.tar.xz
 cd /data/wwwlibs/jquery
 wget --quiet http://code.jquery.com/jquery-1.12.0.min.js
 
