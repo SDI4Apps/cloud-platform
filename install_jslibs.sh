@@ -164,7 +164,7 @@ EOF
 #SSL cert from LetsEncrypt https://letsencrypt.readthedocs.org/en/latest/intro.html
 git clone https://github.com/letsencrypt/letsencrypt /opt/letsencrypt
 cd /opt/letsencrypt
-./letsencrypt-auto --apache --email test@liferay.com --agree-tos -d $(hostname -f)
+./letsencrypt-auto --apache --email test@liferay.com --agree-tos --redirect -d $(hostname -f)
 
 service apache2 restart
 
