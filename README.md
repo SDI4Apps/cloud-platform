@@ -38,17 +38,18 @@ gcloud auth login
 
 Must be submitted from command line. 
 
-Download the files user-data.yaml and launch_on_ceritsc.sh, run the script.
+Download the files user-data.yaml, authenticate, then run  *launch_on_ceritsc.sh*.
 
 ### Setup for CERIT-SC OpenNebula
 
-Install package **opennebula-tools** from [repository](http://docs.opennebula.org/4.10/design_and_installation/quick_starts/qs_ubuntu_kvm.html#install-the-repo). On a Ubuntu 14.04 box, do the following:
+Install package **opennebula-tools** from [repository](http://docs.opennebula.org/4.14/design_and_installation/quick_starts/qs_ubuntu_kvm.html#install-the-repo). On a Ubuntu 14.04 box, do the following:
 ```
 sudo su -
 wget -q -O- http://downloads.opennebula.org/repo/Ubuntu/repo.key | apt-key add -
-echo "deb http://downloads.opennebula.org/repo/4.10/Ubuntu/14.04/ stable opennebula" > /etc/apt/sources.list.d/opennebula.list
+echo "deb http://downloads.opennebula.org/repo/4.14/Ubuntu/14.04/ stable opennebula" > /etc/apt/sources.list.d/opennebula.list
 apt-get update
 apt-get install opennebula-tools
+/usr/share/one/install_gems
 exit
 ```
 
@@ -69,6 +70,5 @@ oneuser login -v $LOGNAME --x509 --cert usercert.pem --key userkey.pem --force
 ```
 #env vars for OpenNebula tools
 export ONE_HOST=https://cloud.metacentrum.cz
-export ONE_AUTH=~/.one/one_x509
 export ONE_XMLRPC=$ONE_HOST:6443/RPC2
 ```
