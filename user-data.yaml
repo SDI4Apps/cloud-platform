@@ -18,6 +18,18 @@ write_files:
        tail -f /var/log/cloud-init-output.log
 
        and wait for the following line to appear: "The SDI4Apps platform installation was completed"
+  - path: /etc/apt/apt.conf.d/50unattended-upgrades
+    content: |1
+     Unattended-Upgrade::Allowed-Origins {
+        "${distro_id}:${distro_codename}";
+        "${distro_id}:${distro_codename}-security";
+        "${distro_id}:${distro_codename}-updates";
+     };
+     Unattended-Upgrade::Mail "root";
+     Unattended-Upgrade::MailOnlyOnError "true";
+     Unattended-Upgrade::Remove-Unused-Dependencies "true";
+     Unattended-Upgrade::Automatic-Reboot "true";
+     Unattended-Upgrade::Automatic-Reboot-Time "02:00";
 
 #add software repositories
 apt_sources:

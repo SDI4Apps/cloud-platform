@@ -201,12 +201,20 @@ service apache2 restart
 
 #Liferay DB
 cd /home/ubuntu
+ # create db user
 cat >/home/ubuntu/setupdb.sql <<"EOF"
 CREATE ROLE liferay NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT LOGIN PASSWORD 'somepass';
 EOF
-wget 'https://acrab.ics.muni.cz/~makub/sdi4apps/liferaydb.sql'
 su postgres -c "psql -f /home/ubuntu/setupdb.sql"
+ # import database for a brand new portal
+wget 'https://acrab.ics.muni.cz/~makub/sdi4apps/liferaydb.sql'
 su postgres -c "psql -f /home/ubuntu/liferaydb.sql"
+ # set correct hostname
+cat >/home/ubuntu/setup_portal.sql <<EOF
+update virtualhost set hostname='$(hostname -f)';
+update account_ set name='SDI4Apps';
+EOF
+su postgres -c "psql -f /home/ubuntu/setup_portal.sql liferaydb"
 
 #Liferay server
 #wget -O liferay-portal-tomcat-6.2-ce-ga6-20160112152609836.zip http://sourceforge.net/projects/lportal/files/Liferay%20Portal/6.2.5%20GA6/liferay-portal-tomcat-6.2-ce-ga6-20160112152609836.zip/download
