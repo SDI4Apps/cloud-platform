@@ -72,6 +72,13 @@ cd /data/www/php
 ln -s /usr/share/phppgadmin pma #phpPgAdmin
 
 
+#get public hostname 
+if [ -f /usr/bin/ec2metadata ] ; then
+ HOSTNAME=$(/usr/bin/ec2metadata --public-hostname)
+else 
+ HOSTNAME=$(hostname -f)
+fi
+
 # prepare Apache
 a2enmod ssl rewrite proxy_ajp proxy_http headers cgi python 
 cat >/etc/apache2/sites-enabled/000-default.conf <<"EOF"
@@ -164,7 +171,7 @@ EOF
 #SSL cert from LetsEncrypt https://letsencrypt.readthedocs.org/en/latest/intro.html
 git clone https://github.com/letsencrypt/letsencrypt /opt/letsencrypt
 cd /opt/letsencrypt
-./letsencrypt-auto --apache --email test@liferay.com --agree-tos --no-redirect -d $(hostname -f)
+./letsencrypt-auto --apache --email test@liferay.com --agree-tos --no-redirect -d $HOSTNAME
 
 service apache2 restart
 
@@ -211,7 +218,7 @@ wget 'https://acrab.ics.muni.cz/~makub/sdi4apps/liferaydb.sql'
 su postgres -c "psql -f /home/ubuntu/liferaydb.sql"
  # set correct hostname
 cat >/home/ubuntu/setup_portal.sql <<EOF
-update virtualhost set hostname='$(hostname -f)';
+update virtualhost set hostname='$HOSTNAME';
 update account_ set name='SDI4Apps';
 EOF
 su postgres -c "psql -f /home/ubuntu/setup_portal.sql liferaydb"
