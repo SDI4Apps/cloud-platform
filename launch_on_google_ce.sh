@@ -4,5 +4,5 @@ gcloud compute instances create sdi4apps-$(date '+%Y%m%d%H%M%S') --description "
   --image-project ubuntu-os-cloud \
   --image ubuntu-1404-trusty-v20150909a \
   --machine-type n1-standard-1 \
-  --zone europe-west1-c \
+  --zone europe-west1-b \
   --metadata-from-file user-data=user-data.yaml

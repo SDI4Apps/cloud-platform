@@ -127,6 +127,7 @@ packages:
   - nodejs 
   - npm 
   - ntp
+  - openssl
   - oracle-java7-installer
   - oracle-java7-unlimited-jce-policy
   - oracle-java7-set-default

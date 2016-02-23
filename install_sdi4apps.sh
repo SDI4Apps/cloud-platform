@@ -75,15 +75,26 @@ ln -s /usr/share/phppgadmin pma #phpPgAdmin
 #get public hostname 
 if [ -f /usr/bin/ec2metadata ] ; then
  HOSTNAME=$(/usr/bin/ec2metadata --public-hostname)
+else if [ -f /usr/bin/gcloud ] ; then 
+ EXT_IP=$(curl -Ls -m 5 http://metadata.google.internal/computeMetadata/v1/instance/network-interfaces/0/access-configs/0/external-ip -H "Metadata-Flavor: Google")
+ HOSTNAME=`python -c "import socket; print socket.getfqdn(\"$EXT_IP\")"`
 else 
  HOSTNAME=$(hostname -f)
 fi
 
 # prepare Apache
 a2enmod ssl rewrite proxy_ajp proxy_http headers cgi python 
-cat >/etc/apache2/sites-enabled/000-default.conf <<"EOF"
+cat >/etc/apache2/sites-enabled/000-default.conf <<EOF
 <VirtualHost *:80>
+  ServerAdmin webmaster@$HOSTNAME
+  RedirectPermanent / https://$HOSTNAME/
+</VirtualHost>
+<VirtualHost *:443>
    ServerAdmin webmaster@localhost
+
+   SSLEngine on
+   SSLCertificateFile /etc/apache2/ssl/cert.pem
+   SSLCertificateKeyFile /etc/apache2/ssl/key.pem
 
    ScriptAlias /cgi-bin/ /data/www/cgi-bin/
    <Directory "/data/www/cgi-bin">
@@ -99,15 +110,6 @@ cat >/etc/apache2/sites-enabled/000-default.conf <<"EOF"
    RewriteCond %{HTTP:Authorization} ^(.*)
    RewriteRule .* - [e=HTTP_AUTHORIZATION:%1]
 
-   <Files "awstats.pl">
-       AuthUserFile /etc/awstats/.htpasswd
-       AuthName "Restricted Area For Customers"
-       AuthType Basic
-       require valid-user
-   </Files>
-
-   Alias /awstats /data/www/awstats
-   Alias /awstats-icon/ /usr/share/awstats/icon/
    Alias /css /data/www/css
    Alias /js /data/www/js
    Alias /maps /data/www/maps
@@ -138,8 +140,6 @@ cat >/etc/apache2/sites-enabled/000-default.conf <<"EOF"
        </ifModule>
    </Location>
 
-   ProxyPass /awstats !
-   ProxyPass /awstats-icon !
    ProxyPass /wwwlibs !
    ProxyPass /php !
    ProxyPass /js !
@@ -168,10 +168,16 @@ cat >/var/www/html/index.html <<"EOF"
  </body>
 </html>
 EOF
+
+# this does not work on clouds :-(
 #SSL cert from LetsEncrypt https://letsencrypt.readthedocs.org/en/latest/intro.html
-git clone https://github.com/letsencrypt/letsencrypt /opt/letsencrypt
-cd /opt/letsencrypt
-./letsencrypt-auto --apache --email test@liferay.com --agree-tos --no-redirect -d $HOSTNAME
+#git clone https://github.com/letsencrypt/letsencrypt /opt/letsencrypt
+#cd /opt/letsencrypt
+#./letsencrypt-auto --apache --email test@liferay.com --agree-tos --no-redirect -d $HOSTNAME
+
+#generate a self-signed certificate with current host name
+mkdir -p /etc/apache/ssl
+openssl req -x509 -newkey rsa:2048 -keyout /etc/apache/ssl/key.pem -out /etc/apache/ssl/cert.pem -days 3650 -nodes -subj "/CN=$HOSTNAME"
 
 service apache2 restart
 
