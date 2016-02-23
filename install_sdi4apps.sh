@@ -73,12 +73,12 @@ ln -s /usr/share/phppgadmin pma #phpPgAdmin
 
 
 #get public hostname 
-if [ -f /usr/bin/ec2metadata ] ; then
- HOSTNAME=$(/usr/bin/ec2metadata --public-hostname)
-else if [ -f /usr/bin/gcloud ] ; then 
+if [ -f /usr/bin/gcloud ] ; then
  EXT_IP=$(curl -Ls -m 5 http://metadata.google.internal/computeMetadata/v1/instance/network-interfaces/0/access-configs/0/external-ip -H "Metadata-Flavor: Google")
  HOSTNAME=`python -c "import socket; print socket.getfqdn(\"$EXT_IP\")"`
-else 
+elif /usr/bin/ec2metadata --public-hostname 2>/dev/null ; then
+ HOSTNAME=$(/usr/bin/ec2metadata --public-hostname)
+else
  HOSTNAME=$(hostname -f)
 fi
 
@@ -176,8 +176,8 @@ EOF
 #./letsencrypt-auto --apache --email test@liferay.com --agree-tos --no-redirect -d $HOSTNAME
 
 #generate a self-signed certificate with current host name
-mkdir -p /etc/apache/ssl
-openssl req -x509 -newkey rsa:2048 -keyout /etc/apache/ssl/key.pem -out /etc/apache/ssl/cert.pem -days 3650 -nodes -subj "/CN=$HOSTNAME"
+mkdir -p /etc/apache2/ssl
+openssl req -x509 -newkey rsa:2048 -keyout /etc/apache2/ssl/key.pem -out /etc/apache2/ssl/cert.pem -days 3650 -nodes -subj "/CN=$HOSTNAME"
 
 service apache2 restart
 
