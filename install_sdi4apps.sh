@@ -229,7 +229,57 @@ su postgres -c "psql -f /home/ubuntu/setup_portal.sql liferaydb"
 wget 'https://acrab.ics.muni.cz/~makub/sdi4apps/liferay-portal-6.2-ce-ga6.tar.xz'
 tar xJf liferay-portal-6.2-ce-ga6.tar.xz
 unzip /data/wwwlibs/geoserver-2.8.2-war.zip geoserver.war -d /home/ubuntu/liferay-portal-6.2-ce-ga6/tomcat-7.0.62/webapps/
-su - ubuntu -c "/home/ubuntu/liferay-portal-6.2-ce-ga6/tomcat-7.0.62/bin/startup.sh"
+cat >/etc/init.d/liferay <<"EOF"
+#!/bin/sh
+#
+# /etc/init.d/liferay -- startup script for the Liferay portal
+#
+### BEGIN INIT INFO
+# Provides:          liferay
+# Required-Start:    $local_fs $remote_fs $network
+# Required-Stop:     $local_fs $remote_fs $network
+# Should-Start:      $named
+# Should-Stop:       $named
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Start Liferay
+# Description:       Start the Liferay portal under the ubuntu user.
+### END INIT INFO
+
+PATH=/bin:/usr/bin:/sbin:/usr/sbin
+NAME=liferay
+DESC="Liferay portal"
+
+if [ `id -u` -ne 0 ]; then
+        echo "You need root privileges to run this script"
+        exit 1
+fi
+
+. /lib/lsb/init-functions
+
+if [ -r /etc/default/rcS ]; then
+        . /etc/default/rcS
+fi
+
+case "$1" in
+  start)
+        log_daemon_msg "Starting $DESC" "$NAME"
+        su - ubuntu -c "/home/ubuntu/liferay-portal-6.2-ce-ga6/tomcat-7.0.62/bin/startup.sh"
+        ;;
+  stop)
+        log_daemon_msg "Stopping $DESC" "$NAME"
+        su - ubuntu -c "/home/ubuntu/liferay-portal-6.2-ce-ga6/tomcat-7.0.62/bin/shutdown.sh"
+        ;;
+  *)
+        log_success_msg "Usage: $0 {start|stop}"
+        exit 1
+        ;;
+esac
+
+exit 0
+EOF
+update-rc.d liferay defaults
+service liferay start
 #portlets
 cat >/home/ubuntu/deploy_portlets.sh <<"EOF"
 cd ~
@@ -262,7 +312,8 @@ cat >/etc/motd <<"EOF"
        - Apache 2.4 + PHP 
        - Oracle Java 7
        - Tomcat 7
-       - MapServer
+       - Geoserver 2.8.2
+       - MapServer 6.4.2
        - Liferay 6.2 GA6
        - HSProxy 
        - proxy4ows
