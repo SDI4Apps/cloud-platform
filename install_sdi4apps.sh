@@ -13,6 +13,7 @@ wget --quiet http://packages.sdi4apps.eu/js.tar.xz
 wget --quiet http://packages.sdi4apps.eu/statusmanager.tar.xz
 wget --quiet http://packages.sdi4apps.eu/metadata.tar.xz
 wget --quiet https://github.com/jezekjan/webglayer/releases/download/v1.0.1/webglayer-1.0.1.zip
+wget --quiet http://downloads.sourceforge.net/project/geoserver/GeoServer/2.8.2/geoserver-2.8.2-war.zip
 #JS libs in /data/wwwlibs
 unzip -o -q ext-3.4.1.1-gpl.zip
 unzip -o -q ext-4.2.1-gpl.zip
@@ -169,12 +170,6 @@ cat >/var/www/html/index.html <<"EOF"
 </html>
 EOF
 
-# this does not work on clouds :-(
-#SSL cert from LetsEncrypt https://letsencrypt.readthedocs.org/en/latest/intro.html
-#git clone https://github.com/letsencrypt/letsencrypt /opt/letsencrypt
-#cd /opt/letsencrypt
-#./letsencrypt-auto --apache --email test@liferay.com --agree-tos --no-redirect -d $HOSTNAME
-
 #generate a self-signed certificate with current host name
 mkdir -p /etc/apache2/ssl
 openssl req -x509 -newkey rsa:2048 -keyout /etc/apache2/ssl/key.pem -out /etc/apache2/ssl/cert.pem -days 3650 -nodes -subj "/CN=$HOSTNAME"
@@ -233,6 +228,7 @@ su postgres -c "psql -f /home/ubuntu/setup_portal.sql liferaydb"
 #wget -O liferay-portal-tomcat-6.2-ce-ga6-20160112152609836.zip http://sourceforge.net/projects/lportal/files/Liferay%20Portal/6.2.5%20GA6/liferay-portal-tomcat-6.2-ce-ga6-20160112152609836.zip/download
 wget 'https://acrab.ics.muni.cz/~makub/sdi4apps/liferay-portal-6.2-ce-ga6.tar.xz'
 tar xJf liferay-portal-6.2-ce-ga6.tar.xz
+unzip /data/wwwlibs/geoserver-2.8.2-war.zip geoserver.war -d /home/ubuntu/liferay-portal-6.2-ce-ga6/tomcat-7.0.62/webapps/
 su - ubuntu -c "/home/ubuntu/liferay-portal-6.2-ce-ga6/tomcat-7.0.62/bin/startup.sh"
 #portlets
 cat >/home/ubuntu/deploy_portlets.sh <<"EOF"
@@ -262,6 +258,7 @@ cat >/etc/motd <<"EOF"
        It provides the following software:
        - PostgreSQL 9.5
        - PostGIS 
+       - pgRouting
        - Apache 2.4 + PHP 
        - Oracle Java 7
        - Tomcat 7
@@ -271,10 +268,12 @@ cat >/etc/motd <<"EOF"
        - proxy4ows
        - Statusmanager
        - LayMan
+       - MICKA
        - phpPgAdmin
        - JavaScript libraries
          - ExtJS 3.4.1
          - ExtJS 4.2.1
+         - jQuery 1.12.0
          - Proj4js
          - HSLayers 3.5
          - HSLayers NG

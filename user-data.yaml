@@ -140,6 +140,7 @@ packages:
   - phppgadmin
   - postgis
   - postfix
+  - postgresql-9.5-pgrouting
   - python-cssutils 
   - python-html5lib 
   - python-httplib2 
