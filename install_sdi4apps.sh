@@ -215,7 +215,7 @@ CREATE ROLE liferay NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT LOGIN PASSWORD '
 EOF
 su postgres -c "psql -f /home/ubuntu/setupdb.sql"
  # import database for a brand new portal
-wget 'https://acrab.ics.muni.cz/~makub/sdi4apps/liferaydb.sql'
+wget --quiet 'https://acrab.ics.muni.cz/~makub/sdi4apps/liferaydb.sql'
 su postgres -c "psql -f /home/ubuntu/liferaydb.sql"
  # set correct hostname
 cat >/home/ubuntu/setup_portal.sql <<EOF
@@ -226,7 +226,7 @@ su postgres -c "psql -f /home/ubuntu/setup_portal.sql liferaydb"
 
 #Liferay server
 #wget -O liferay-portal-tomcat-6.2-ce-ga6-20160112152609836.zip http://sourceforge.net/projects/lportal/files/Liferay%20Portal/6.2.5%20GA6/liferay-portal-tomcat-6.2-ce-ga6-20160112152609836.zip/download
-wget 'https://acrab.ics.muni.cz/~makub/sdi4apps/liferay-portal-6.2-ce-ga6.tar.xz'
+wget --quiet 'https://acrab.ics.muni.cz/~makub/sdi4apps/liferay-portal-6.2-ce-ga6.tar.xz'
 tar xJf liferay-portal-6.2-ce-ga6.tar.xz
 unzip /data/wwwlibs/geoserver-2.8.2-war.zip geoserver.war -d /home/ubuntu/liferay-portal-6.2-ce-ga6/tomcat-7.0.62/webapps/
 cat >/etc/init.d/liferay <<"EOF"
@@ -278,9 +278,11 @@ esac
 
 exit 0
 EOF
+chmod a+x /etc/init.d/liferay
 update-rc.d liferay defaults
 service liferay start
-#portlets
+
+#geo portlets
 cat >/home/ubuntu/deploy_portlets.sh <<"EOF"
 cd ~
 git clone --quiet https://github.com/SDI4Apps/liferay
