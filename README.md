@@ -4,9 +4,9 @@ cloud-init description for newly launched VMs
 This repository contains config file for cloud-init that converts plain Ubuntu 14.04 LTS to SDI4Apps platform.
 
 See the following sections to see how to launch it on various clouds:
-* [Amazon AWS](#Amazon-AWS)
-* [Google CE](#Google-Computing-Engine)
-* [CERIT-SC](#CERIT-SC-OpenNebula)
+* [Amazon AWS](#amazon-aws)
+* [Google CE](#google-computing-engine)
+* [CERIT-SC](#cerit-sc-opennebula)
 
 ## Amazon AWS
 
