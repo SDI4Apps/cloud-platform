@@ -5,37 +5,14 @@ This repository contains config file for cloud-init that converts plain Ubuntu 1
 
 See the following sections to see how to launch it on various clouds:
 * [Amazon AWS](#amazon-aws)
-* [Google CE](#google-computing-engine)
 * [CERIT-SC](#cerit-sc-opennebula)
+* [Google CE](#google-computing-engine)
 
 ## Amazon AWS
 
 In the **Step 3**  of [Launch Wizard](https://eu-west-1.console.aws.amazon.com/ec2/v2/home?region=eu-west-1#LaunchInstanceWizard:),
 click on **Advanced Details**, then in the section **User Data** click **As file** and upload the file user-data.yaml.
 
-## Google Computing Engine
-
-Must be submitted from command line. 
-
-Download the files user-data.yaml and launch_on_google_ce.sh, run the script.
-
-### Setup for Google Computing Engine
-
-Install Google Cloud tools from [repository](https://cloud.google.com/sdk/#debubu). On a Ubuntu 14.04 box, do the following:
-```
-sudo su -
-export CLOUD_SDK_REPO=cloud-sdk-`lsb_release -c -s`
-curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
-echo "deb http://packages.cloud.google.com/apt $CLOUD_SDK_REPO main" > /etc/apt/sources.list.d/google-cloud-sdk.list
-apt-get update 
-apt-get install google-cloud-sdk
-exit
-gcloud init
-```
-Set up authentication by running the following command:
-```
-gcloud auth login
-```
 
 ## CERIT-SC OpenNebula
 
@@ -74,4 +51,28 @@ oneuser login -v $LOGNAME --x509 --cert usercert.pem --key userkey.pem --force
 #env vars for OpenNebula tools
 export ONE_HOST=https://cloud.metacentrum.cz
 export ONE_XMLRPC=$ONE_HOST:6443/RPC2
+```
+
+## Google Computing Engine
+
+Must be submitted from command line. 
+
+Download the files user-data.yaml and launch_on_google_ce.sh, run the script.
+
+### Setup for Google Computing Engine
+
+Install Google Cloud tools from [repository](https://cloud.google.com/sdk/#debubu). On a Ubuntu 14.04 box, do the following:
+```
+sudo su -
+export CLOUD_SDK_REPO=cloud-sdk-`lsb_release -c -s`
+curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+echo "deb http://packages.cloud.google.com/apt $CLOUD_SDK_REPO main" > /etc/apt/sources.list.d/google-cloud-sdk.list
+apt-get update 
+apt-get install google-cloud-sdk
+exit
+gcloud init
+```
+Set up authentication by running the following command:
+```
+gcloud auth login
 ```
