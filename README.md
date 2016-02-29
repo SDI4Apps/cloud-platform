@@ -1,9 +1,12 @@
 # cloud-platform
 cloud-init description for newly launched VMs
 
-This repository contains config file for cloud-init that converts plain Ubuntu 14.04 LTS to SDI4Apps platform,
-and shell scripts for launching it on various public clouds.
+This repository contains config file for cloud-init that converts plain Ubuntu 14.04 LTS to SDI4Apps platform.
 
+See the following sections to see how to launch it on various clouds:
+* [Amazon AWS](#Amazon-AWS)
+* [Google CE](#Google-Computing-Engine)
+* [CERIT-SC](#CERIT-SC-OpenNebula)
 
 ## Amazon AWS
 
@@ -36,11 +39,11 @@ gcloud auth login
 
 ## CERIT-SC OpenNebula
 
-Must be submitted from command line. 
+Log into [OpenNebula web interface](https://cloud.metacentrum.cz/). Instantiate the template 3508 "SDI4Apps platform (4 CPU) VNC".
 
-Download the files user-data.yaml, authenticate, then run  *launch_on_ceritsc.sh*.
+It can be also submitted from command line.  Download the files user-data.yaml, authenticate, then run  *launch_on_ceritsc.sh*.
 
-### Setup for CERIT-SC OpenNebula
+### Setup for CERIT-SC OpenNebula Command Line
 
 Install package **opennebula-tools** from [repository](http://docs.opennebula.org/4.14/design_and_installation/quick_starts/qs_ubuntu_kvm.html#install-the-repo). On a Ubuntu 14.04 box, do the following:
 ```
