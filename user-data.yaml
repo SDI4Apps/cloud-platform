@@ -151,8 +151,6 @@ packages:
   - python-webpy 
   - rsync 
   - subversion 
-  - tomcat7
-  - tomcat7-user
   - wget
 #create some users
 users:

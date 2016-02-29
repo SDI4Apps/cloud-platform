@@ -165,7 +165,7 @@ cat >/var/www/html/index.html <<"EOF"
   <title>SDI4Apps platform</title>
  </head>
  <body>
-  <h1>SDI4Apps platform</h1>
+  <h1>SDI4Apps platform is being installed, please wait ...</h1>
  </body>
 </html>
 EOF
@@ -174,7 +174,6 @@ EOF
 mkdir -p /etc/apache2/ssl
 openssl req -x509 -newkey rsa:2048 -keyout /etc/apache2/ssl/key.pem -out /etc/apache2/ssl/cert.pem -days 3650 -nodes -subj "/CN=$HOSTNAME"
 
-service apache2 restart
 
 #Tomcat
 #su ubuntu tomcat7-instance-create /home/ubuntu/tomcat7
@@ -207,28 +206,72 @@ service apache2 restart
 #mkdir -p /usr/share/tomcat7/common/classes /usr/share/tomcat7/server/classes /usr/share/tomcat7/shared/classes
 #su ubuntu /home/ubuntu/tomcat7/bin/startup.sh
 
-#Liferay DB
+
+
+#Liferay server - options are:
+# notinstalled - only downloaded, no set up, no database
+# notconfigured - installed, with database, with geo portlets, not set up
+# geo - installed, with portlets, set up to display a map
+
+LIFERAY_SETUP=geo
+
+echo "Installing Liferay ..."
 cd /home/ubuntu
- # create db user
+# create db user
 cat >/home/ubuntu/setupdb.sql <<"EOF"
 CREATE ROLE liferay NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT LOGIN PASSWORD 'somepass';
 EOF
 su postgres -c "psql -f /home/ubuntu/setupdb.sql"
- # import database for a brand new portal
-wget --quiet 'https://acrab.ics.muni.cz/~makub/sdi4apps/liferaydb.sql'
-su postgres -c "psql -f /home/ubuntu/liferaydb.sql"
- # set correct hostname
+
+case "$LIFERAY_SETUP"  in 
+ notinstalled)
+     # only download
+     wget --quiet -O liferay-portal-tomcat-6.2-ce-ga6-20160112152609836.zip http://sourceforge.net/projects/lportal/files/Liferay%20Portal/6.2.5%20GA6/liferay-portal-tomcat-6.2-ce-ga6-20160112152609836.zip/download
+     ;;
+ notconfigured)
+     # download installed and packed Liferay
+     wget --quiet 'https://acrab.ics.muni.cz/~makub/sdi4apps/liferay-portal-6.2-ce-ga6.tar.xz'
+     tar xJf liferay-portal-6.2-ce-ga6.tar.xz
+     # import database for a brand new portal
+     wget --quiet 'https://acrab.ics.muni.cz/~makub/sdi4apps/liferaydb.sql'
+     su postgres -c "psql -f /home/ubuntu/liferaydb.sql"
+     #add geo portlets
+     cat >/home/ubuntu/deploy_portlets.sh <<"EOF"
+cd ~
+git clone --quiet https://github.com/SDI4Apps/liferay
+cd liferay
+sed -i -e 's#app.server.tomcat.dir=${app.server.parent.dir}/tomcat-7.0.42#app.server.tomcat.dir=/home/ubuntu/liferay-portal-6.2-ce-ga6/tomcat-7.0.62#' build.properties
+cd portlets ; ant war ; ant war ; cd ..
+cd hooks ; ant war ; cd ..
+cd themes ; ant war ; cd ..
+cd dist
+cp * ~/liferay-portal-6.2-ce-ga6/deploy/
+EOF
+     chmod a+x /home/ubuntu/deploy_portlets.sh
+     su - ubuntu -c "/home/ubuntu/deploy_portlets.sh"
+     ;;
+ geo)
+     #configured to display a map
+     wget --quiet 'https://acrab.ics.muni.cz/~makub/sdi4apps/liferay-portal-sdi4apps.tar.xz'
+     tar xJf liferay-portal-sdi4apps.tar.xz
+     # import database for a brand new portal
+     wget --quiet 'https://acrab.ics.muni.cz/~makub/sdi4apps/liferaydb_sdi4apps.sql'
+     su postgres -c "psql -f /home/ubuntu/liferaydb_sdi4apps.sql"
+     ;;
+esac
+
+# set correct hostname for Liferay - needed for correct generated URLs
 cat >/home/ubuntu/setup_portal.sql <<EOF
 update virtualhost set hostname='$HOSTNAME';
 update account_ set name='SDI4Apps';
 EOF
 su postgres -c "psql -f /home/ubuntu/setup_portal.sql liferaydb"
 
-#Liferay server
-#wget -O liferay-portal-tomcat-6.2-ce-ga6-20160112152609836.zip http://sourceforge.net/projects/lportal/files/Liferay%20Portal/6.2.5%20GA6/liferay-portal-tomcat-6.2-ce-ga6-20160112152609836.zip/download
-wget --quiet 'https://acrab.ics.muni.cz/~makub/sdi4apps/liferay-portal-6.2-ce-ga6.tar.xz'
-tar xJf liferay-portal-6.2-ce-ga6.tar.xz
+# add GeoServer
 unzip /data/wwwlibs/geoserver-2.8.2-war.zip geoserver.war -d /home/ubuntu/liferay-portal-6.2-ce-ga6/tomcat-7.0.62/webapps/
+chown ubuntu:ubuntu /home/ubuntu/liferay-portal-6.2-ce-ga6/tomcat-7.0.62/webapps/geoserver.war
+
+# add Liferay as a service started after boot and start it
 cat >/etc/init.d/liferay <<"EOF"
 #!/bin/sh
 #
@@ -282,22 +325,10 @@ chmod a+x /etc/init.d/liferay
 update-rc.d liferay defaults
 service liferay start
 
-#geo portlets
-cat >/home/ubuntu/deploy_portlets.sh <<"EOF"
-cd ~
-git clone --quiet https://github.com/SDI4Apps/liferay
-cd liferay
-sed -i -e 's#app.server.tomcat.dir=${app.server.parent.dir}/tomcat-7.0.42#app.server.tomcat.dir=/home/ubuntu/liferay-portal-6.2-ce-ga6/tomcat-7.0.62#' build.properties
-cd portlets ; ant war ; ant war ; cd ..
-cd hooks ; ant war ; cd ..
-cd themes ; ant war ; cd ..
-cd dist
-cp * ~/liferay-portal-6.2-ce-ga6/deploy/
-EOF
-chmod a+x /home/ubuntu/deploy_portlets.sh
-su - ubuntu -c "/home/ubuntu/deploy_portlets.sh"
+#restart Apache to activate forwarding to Liferay
+service apache2 restart
 
-
+#done, change the Message-Of-The-Day to show it
 cat >/etc/motd <<"EOF"
        This is the SDI4Apps platform
         ____  ____ ___ _  _     _
@@ -308,21 +339,21 @@ cat >/etc/motd <<"EOF"
                                     |_|   |_|
 
        It provides the following software:
+       - Apache 2.4 + PHP 
+       - Geoserver 2.8.2
+       - HSProxy 
+       - LayMan
+       - Liferay 6.2 GA6
+       - MapServer 6.4.2
+       - MICKA
+       - Oracle Java 7
+       - pgRouting
+       - phpPgAdmin
        - PostgreSQL 9.5
        - PostGIS 
-       - pgRouting
-       - Apache 2.4 + PHP 
-       - Oracle Java 7
-       - Tomcat 7
-       - Geoserver 2.8.2
-       - MapServer 6.4.2
-       - Liferay 6.2 GA6
-       - HSProxy 
-       - proxy4ows
+       - Proxy4ows
        - Statusmanager
-       - LayMan
-       - MICKA
-       - phpPgAdmin
+       - Tomcat 7
        - JavaScript libraries
          - ExtJS 3.4.1
          - ExtJS 4.2.1
