@@ -3,7 +3,6 @@
 
 mkdir -p /data/wwwlibs/jquery /data/www/py /data/www/php /data/www/cgi-bin /data/www/wwwlibs
 cd /data/wwwlibs
-wget --quiet http://cdn.sencha.com/ext/gpl/ext-3.4.1.1-gpl.zip
 wget --quiet http://cdn.sencha.com/ext/gpl/ext-4.2.1-gpl.zip
 wget --quiet http://packages.sdi4apps.eu/hsproxy.tar.xz
 wget --quiet http://packages.sdi4apps.eu/proxy4ows.tar.xz
@@ -15,7 +14,6 @@ wget --quiet http://packages.sdi4apps.eu/metadata.tar.xz
 wget --quiet https://github.com/jezekjan/webglayer/releases/download/v1.0.1/webglayer-1.0.1.zip
 wget --quiet http://downloads.sourceforge.net/project/geoserver/GeoServer/2.8.2/geoserver-2.8.2-war.zip
 #JS libs in /data/wwwlibs
-unzip -o -q ext-3.4.1.1-gpl.zip
 unzip -o -q ext-4.2.1-gpl.zip
 tar xJf hsproxy.tar.xz
 tar xJf proxy4ows.tar.xz
@@ -26,12 +24,6 @@ tar xJf /data/wwwlibs/css.tar.xz
 tar xJf /data/wwwlibs/js.tar.xz
 cd /data/wwwlibs/jquery
 wget --quiet http://code.jquery.com/jquery-1.12.0.min.js
-
-#HS Layers
-cd /data/wwwlibs
-svn co --quiet svn://bnhelp.cz/hslayers/branches/hslayers-3.5
-cd hslayers-3.5/tools
-python build.py -rpica >/dev/null 2>&1
 
 #LayMan
 cd /data/www/py
@@ -55,9 +47,7 @@ npm install --unsafe-perm
 
 # well known URLs
 cd /data/www/wwwlibs
-ln -s /data/wwwlibs/ext-3.4.1 ext
 ln -s /data/wwwlibs/ext-4.2.1.883 ext4
-ln -s /data/wwwlibs/hslayers-3.5/build hslayers
 ln -s /data/wwwlibs/hslayers-ng hslayers-ng
 ln -s /data/wwwlibs/hsproxy hsproxy
 ln -s /data/wwwlibs/jquery jquery
@@ -355,11 +345,9 @@ cat >/etc/motd <<"EOF"
        - Statusmanager
        - Tomcat 7
        - JavaScript libraries
-         - ExtJS 3.4.1
          - ExtJS 4.2.1
          - jQuery 1.12.0
          - Proj4js
-         - HSLayers 3.5
          - HSLayers NG
          - WebGLayer
 
