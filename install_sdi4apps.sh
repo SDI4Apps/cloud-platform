@@ -211,7 +211,6 @@ openssl req -x509 -newkey rsa:2048 -keyout /etc/apache2/ssl/key.pem -out /etc/ap
 
 
 
-echo -n "Installing Liferay ... " ; date
 #Liferay server - options are:
 # notinstalled - only downloaded, no set up, no database
 # notconfigured - installed, with database, with geo portlets, not set up
@@ -255,15 +254,20 @@ EOF
      ;;
  geo)
      #configured to display a map
+     echo -n "Downloading Liferay ... " ; date
      wget --quiet 'https://acrab.ics.muni.cz/~makub/sdi4apps/liferay-portal-sdi4apps.tar.xz'
+     echo -n "Extracting Liferay ... " ; date
      tar xJf liferay-portal-sdi4apps.tar.xz
      # import database for a brand new portal
+     echo -n "Downloading Liferay database ... " ; date
      wget --quiet 'https://acrab.ics.muni.cz/~makub/sdi4apps/liferaydb_sdi4apps.sql'
+     echo -n "Importing Liferay database ... " ; date
      su postgres -c "psql -f /home/ubuntu/liferaydb_sdi4apps.sql"
      ;;
 esac
 
 # set correct hostname for Liferay - needed for correct generated URLs
+echo -n "Setting Liferay hostname ..." ; date
 cat >/home/ubuntu/setup_portal.sql <<EOF
 update virtualhost set hostname='$HOSTNAME';
 update account_ set name='SDI4Apps';
