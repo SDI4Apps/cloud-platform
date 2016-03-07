@@ -1,6 +1,6 @@
 #!/bin/bash
 
-
+echo -n "Downloading SDI4Apps libraries ... " ; date
 mkdir -p /data/wwwlibs/jquery /data/www/py /data/www/php /data/www/cgi-bin /data/www/wwwlibs
 cd /data/wwwlibs
 wget --quiet http://packages.sdi4apps.eu/hsl_ng_bower.tar.xz
@@ -15,6 +15,7 @@ wget --quiet http://packages.sdi4apps.eu/statusmanager.tar.xz
 wget --quiet http://packages.sdi4apps.eu/metadata.tar.xz
 wget --quiet https://github.com/jezekjan/webglayer/releases/download/v1.0.1/webglayer-1.0.1.zip
 wget --quiet http://downloads.sourceforge.net/project/geoserver/GeoServer/2.8.2/geoserver-2.8.2-war.zip
+echo -n "Extracting SDI4Apps libraries ... " ; date
 #JS libs in /data/wwwlibs
 unzip -o -q ext-4.2.1-gpl.zip
 tar xJf hsproxy.tar.xz
@@ -28,14 +29,17 @@ cd /data/wwwlibs/jquery
 wget --quiet http://code.jquery.com/jquery-1.12.0.min.js
 
 #LayMan
+echo -n "Installing Layman ... " ; date
 cd /data/www/py
 git clone --quiet https://github.com/CCSS-CZ/layman
 
 #MICKA
+echo -n "Installing MICKA ... " ; date
 cd /data/www/php
 tar xJf /data/wwwlibs/metadata.tar.xz
 
 #HS Layers NG
+echo -n "Installing Layers NG ... " ; date
 cd /data/wwwlibs
 ln -s /usr/bin/nodejs /usr/bin/node
 #git clone --quiet https://github.com/hslayers/hslayers-ng.git
@@ -51,8 +55,8 @@ cd hslayers-ng
 tar xJf /data/wwwlibs/hsl_ng_bower.tar.xz
 tar xJf /data/wwwlibs/hsl_ng_node.tar.xz
 
-
 # well known URLs
+echo -n "Setting symbolic links in /data/www/wwwlibs ... " ; date
 cd /data/www/wwwlibs
 ln -s /data/wwwlibs/ext-4.2.1.883 ext4
 ln -s /data/wwwlibs/hslayers-ng hslayers-ng
@@ -71,6 +75,7 @@ ln -s /usr/share/phppgadmin pma #phpPgAdmin
 
 
 #get public hostname 
+echo -n "Getting public hostname ... " ; date
 if [ -f /usr/bin/gcloud ] ; then
  EXT_IP=$(curl -Ls -m 5 http://metadata.google.internal/computeMetadata/v1/instance/network-interfaces/0/access-configs/0/external-ip -H "Metadata-Flavor: Google")
  HOSTNAME=`python -c "import socket; print socket.getfqdn(\"$EXT_IP\")"`
@@ -81,6 +86,7 @@ else
 fi
 
 # prepare Apache
+echo -n "Configuring Apache ... " ; date
 a2enmod ssl rewrite proxy_ajp proxy_http headers cgi python 
 cat >/etc/apache2/sites-enabled/000-default.conf <<EOF
 <VirtualHost *:80>
@@ -205,6 +211,7 @@ openssl req -x509 -newkey rsa:2048 -keyout /etc/apache2/ssl/key.pem -out /etc/ap
 
 
 
+echo -n "Installing Liferay ... " ; date
 #Liferay server - options are:
 # notinstalled - only downloaded, no set up, no database
 # notconfigured - installed, with database, with geo portlets, not set up
@@ -212,7 +219,6 @@ openssl req -x509 -newkey rsa:2048 -keyout /etc/apache2/ssl/key.pem -out /etc/ap
 
 LIFERAY_SETUP=geo
 
-echo "Installing Liferay ..."
 cd /home/ubuntu
 # create db user
 cat >/home/ubuntu/setupdb.sql <<"EOF"
@@ -265,10 +271,12 @@ EOF
 su postgres -c "psql -f /home/ubuntu/setup_portal.sql liferaydb"
 
 # add GeoServer
+echo -n "Installing GeoServer ... " ; date
 unzip /data/wwwlibs/geoserver-2.8.2-war.zip geoserver.war -d /home/ubuntu/liferay-portal-6.2-ce-ga6/tomcat-7.0.62/webapps/
 chown ubuntu:ubuntu /home/ubuntu/liferay-portal-6.2-ce-ga6/tomcat-7.0.62/webapps/geoserver.war
 
 # add Liferay as a service started after boot and start it
+echo -n "Configuring Liferay as service ... " ; date
 cat >/etc/init.d/liferay <<"EOF"
 #!/bin/sh
 #
@@ -359,3 +367,4 @@ cat >/etc/motd <<"EOF"
          - WebGLayer
 
 EOF
+echo -n "SDI4Apps platform installed ... " ; date
