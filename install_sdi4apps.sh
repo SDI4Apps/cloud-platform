@@ -3,6 +3,8 @@
 
 mkdir -p /data/wwwlibs/jquery /data/www/py /data/www/php /data/www/cgi-bin /data/www/wwwlibs
 cd /data/wwwlibs
+wget --quiet http://packages.sdi4apps.eu/hsl_ng_bower.tar.xz
+wget --quiet http://packages.sdi4apps.eu/hsl_ng_node.tar.xz
 wget --quiet http://cdn.sencha.com/ext/gpl/ext-4.2.1-gpl.zip
 wget --quiet http://packages.sdi4apps.eu/hsproxy.tar.xz
 wget --quiet http://packages.sdi4apps.eu/proxy4ows.tar.xz
@@ -35,15 +37,20 @@ tar xJf /data/wwwlibs/metadata.tar.xz
 
 #HS Layers NG
 cd /data/wwwlibs
-git clone --quiet https://github.com/hslayers/hslayers-ng.git
 ln -s /usr/bin/nodejs /usr/bin/node
-cat >/root/.bowerrc <<"EOF"
-{"interactive": false}
-EOF
+#git clone --quiet https://github.com/hslayers/hslayers-ng.git
+#cat >/root/.bowerrc <<"EOF"
+#{"interactive": false}
+#EOF
+#cd hslayers-ng
+#sed -i -e 's/bower --allow-root/bower --allow-root --silent/' package.json
+#npm config set loglevel warn
+#npm install --unsafe-perm
+mkdir hslayers-ng
 cd hslayers-ng
-sed -i -e 's/bower --allow-root/bower --allow-root --silent/' package.json
-npm config set loglevel warn
-npm install --unsafe-perm
+tar xJf /data/wwwlibs/hsl_ng_bower.tar.xz
+tar xJf /data/wwwlibs/hsl_ng_node.tar.xz
+
 
 # well known URLs
 cd /data/www/wwwlibs
