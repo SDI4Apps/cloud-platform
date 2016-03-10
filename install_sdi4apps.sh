@@ -42,18 +42,16 @@ tar xJf /data/wwwlibs/metadata.tar.xz
 echo -n "Installing Layers NG ... " ; date
 cd /data/wwwlibs
 ln -s /usr/bin/nodejs /usr/bin/node
-#git clone --quiet https://github.com/hslayers/hslayers-ng.git
-#cat >/root/.bowerrc <<"EOF"
-#{"interactive": false}
-#EOF
-#cd hslayers-ng
-#sed -i -e 's/bower --allow-root/bower --allow-root --silent/' package.json
-#npm config set loglevel warn
-#npm install --unsafe-perm
-mkdir hslayers-ng
+git clone --quiet https://github.com/hslayers/hslayers-ng.git
 cd hslayers-ng
 tar xJf /data/wwwlibs/hsl_ng_bower.tar.xz
 tar xJf /data/wwwlibs/hsl_ng_node.tar.xz
+cat >/root/.bowerrc <<"EOF"
+{"interactive": false}
+EOF
+sed -i -e 's/bower --allow-root/bower --allow-root --silent/' package.json
+npm config set loglevel warn
+npm install --unsafe-perm
 
 # well known URLs
 echo -n "Setting symbolic links in /data/www/wwwlibs ... " ; date
@@ -118,7 +116,7 @@ cat >/etc/apache2/sites-enabled/000-default.conf <<EOF
    Alias /js /data/www/js
    Alias /maps /data/www/maps
    Alias /php /data/www/php
-   Alias /wwwlibs /data/wwwlibs
+   Alias /wwwlibs /data/www/wwwlibs
 
    <Directory /data/www>
        Options +FollowSymLinks +MultiViews
@@ -216,7 +214,7 @@ openssl req -x509 -newkey rsa:2048 -keyout /etc/apache2/ssl/key.pem -out /etc/ap
 # notconfigured - installed, with database, with geo portlets, not set up
 # geo - installed, with portlets, set up to display a map
 
-LIFERAY_SETUP=geo
+LIFERAY_SETUP=notconfigured
 
 cd /home/ubuntu
 # create db user
@@ -238,19 +236,27 @@ case "$LIFERAY_SETUP"  in
      wget --quiet 'https://acrab.ics.muni.cz/~makub/sdi4apps/liferaydb.sql'
      su postgres -c "psql -f /home/ubuntu/liferaydb.sql"
      #add geo portlets
+#     cat >/home/ubuntu/deploy_portlets.sh <<"EOF"
+#cd ~
+#git clone --quiet https://github.com/SDI4Apps/liferay
+#cd liferay
+#sed -i -e 's#app.server.tomcat.dir=${app.server.parent.dir}/tomcat-7.0.42#app.server.tomcat.dir=/home/ubuntu/liferay-portal-6.2-ce-ga6/tomcat-7.0.62#' build.properties
+#cd portlets ; ant war ; ant war ; cd ..
+#cd hooks ; ant war ; cd ..
+#cd themes ; ant war ; cd ..
+#cd dist
+#cp * ~/liferay-portal-6.2-ce-ga6/deploy/
+#EOF
+#     chmod a+x /home/ubuntu/deploy_portlets.sh
+#     su - ubuntu -c "/home/ubuntu/deploy_portlets.sh"
+     wget --quiet 'http://packages.sdi4apps.eu/portlets.tar.xz' 
      cat >/home/ubuntu/deploy_portlets.sh <<"EOF"
-cd ~
-git clone --quiet https://github.com/SDI4Apps/liferay
-cd liferay
-sed -i -e 's#app.server.tomcat.dir=${app.server.parent.dir}/tomcat-7.0.42#app.server.tomcat.dir=/home/ubuntu/liferay-portal-6.2-ce-ga6/tomcat-7.0.62#' build.properties
-cd portlets ; ant war ; ant war ; cd ..
-cd hooks ; ant war ; cd ..
-cd themes ; ant war ; cd ..
-cd dist
-cp * ~/liferay-portal-6.2-ce-ga6/deploy/
+cd ~/liferay-portal-6.2-ce-ga6/deploy/
+tar xJf /home/ubuntu/portlets.tar.xz
 EOF
      chmod a+x /home/ubuntu/deploy_portlets.sh
      su - ubuntu -c "/home/ubuntu/deploy_portlets.sh"
+
      ;;
  geo)
      #configured to display a map
