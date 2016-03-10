@@ -71,6 +71,9 @@ ln -s ../wwwlibs/proxy4ows/proxy4ows.cgi proxy4ows.cgi
 cd /data/www/php
 ln -s /usr/share/phppgadmin pma #phpPgAdmin
 
+#set ownership - dangerous, change later !
+cd /data/www
+chown -R www-data:www-data .
 
 #get public hostname 
 echo -n "Getting public hostname ... " ; date
@@ -214,7 +217,7 @@ openssl req -x509 -newkey rsa:2048 -keyout /etc/apache2/ssl/key.pem -out /etc/ap
 # notconfigured - installed, with database, with geo portlets, not set up
 # geo - installed, with portlets, set up to display a map
 
-LIFERAY_SETUP=notconfigured
+LIFERAY_SETUP=geo
 
 cd /home/ubuntu
 # create db user
@@ -232,23 +235,12 @@ case "$LIFERAY_SETUP"  in
      # download installed and packed Liferay
      wget --quiet 'https://acrab.ics.muni.cz/~makub/sdi4apps/liferay-portal-6.2-ce-ga6.tar.xz'
      tar xJf liferay-portal-6.2-ce-ga6.tar.xz
+     rm liferay-portal-6.2-ce-ga6.tar.xz
      # import database for a brand new portal
      wget --quiet 'https://acrab.ics.muni.cz/~makub/sdi4apps/liferaydb.sql'
      su postgres -c "psql -f /home/ubuntu/liferaydb.sql"
+     rm liferaydb.sql
      #add geo portlets
-#     cat >/home/ubuntu/deploy_portlets.sh <<"EOF"
-#cd ~
-#git clone --quiet https://github.com/SDI4Apps/liferay
-#cd liferay
-#sed -i -e 's#app.server.tomcat.dir=${app.server.parent.dir}/tomcat-7.0.42#app.server.tomcat.dir=/home/ubuntu/liferay-portal-6.2-ce-ga6/tomcat-7.0.62#' build.properties
-#cd portlets ; ant war ; ant war ; cd ..
-#cd hooks ; ant war ; cd ..
-#cd themes ; ant war ; cd ..
-#cd dist
-#cp * ~/liferay-portal-6.2-ce-ga6/deploy/
-#EOF
-#     chmod a+x /home/ubuntu/deploy_portlets.sh
-#     su - ubuntu -c "/home/ubuntu/deploy_portlets.sh"
      wget --quiet 'http://packages.sdi4apps.eu/portlets.tar.xz' 
      cat >/home/ubuntu/deploy_portlets.sh <<"EOF"
 cd ~/liferay-portal-6.2-ce-ga6/deploy/
@@ -256,7 +248,7 @@ tar xJf /home/ubuntu/portlets.tar.xz
 EOF
      chmod a+x /home/ubuntu/deploy_portlets.sh
      su - ubuntu -c "/home/ubuntu/deploy_portlets.sh"
-
+     rm portlets.tar.xz
      ;;
  geo)
      #configured to display a map
@@ -264,11 +256,13 @@ EOF
      wget --quiet 'https://acrab.ics.muni.cz/~makub/sdi4apps/liferay-portal-sdi4apps.tar.xz'
      echo -n "Extracting Liferay ... " ; date
      tar xJf liferay-portal-sdi4apps.tar.xz
+     rm liferay-portal-sdi4apps.tar.xz
      # import database for a brand new portal
      echo -n "Downloading Liferay database ... " ; date
      wget --quiet 'https://acrab.ics.muni.cz/~makub/sdi4apps/liferaydb_sdi4apps.sql'
      echo -n "Importing Liferay database ... " ; date
      su postgres -c "psql -f /home/ubuntu/liferaydb_sdi4apps.sql"
+     rm liferaydb_sdi4apps.sql
      ;;
 esac
 
