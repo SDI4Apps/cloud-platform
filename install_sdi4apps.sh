@@ -6,6 +6,7 @@ cd /data/wwwlibs
 wget --quiet http://packages.sdi4apps.eu/hsl_ng_bower.tar.xz
 wget --quiet http://packages.sdi4apps.eu/hsl_ng_node.tar.xz
 wget --quiet http://cdn.sencha.com/ext/gpl/ext-4.2.1-gpl.zip
+wget --quiet http://packages.sdi4apps.eu/ext4_sandbox_gray.tar.xz
 wget --quiet http://packages.sdi4apps.eu/hsproxy.tar.xz
 wget --quiet http://packages.sdi4apps.eu/proxy4ows.tar.xz
 wget --quiet http://packages.sdi4apps.eu/proj4js.tar.xz
@@ -27,6 +28,8 @@ tar xJf /data/wwwlibs/css.tar.xz
 tar xJf /data/wwwlibs/js.tar.xz
 cd /data/wwwlibs/jquery
 wget --quiet http://code.jquery.com/jquery-1.12.0.min.js
+cd /data/wwwlibs/ext-4.2.1.883/resources
+tar xJf /data/wwwlibs/ext4_sandbox_gray.tar.xz
 
 #LayMan
 echo -n "Installing Layman ... " ; date
