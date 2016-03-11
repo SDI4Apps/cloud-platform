@@ -1,5 +1,17 @@
 #!/bin/bash
 
+echo -n "Preparing SQL databases ... " ; date
+cd /home/ubuntu
+# create db user
+cat >/home/ubuntu/setupdb.sql <<"EOF"
+CREATE ROLE liferay NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT LOGIN PASSWORD 'somepass';
+CREATE DATABASE layman;
+ALTER DATABASE layman OWNER TO liferay;
+CREATE DATABASE micka;
+ALTER DATABASE micka OWNER TO liferay;
+EOF
+su postgres -c "psql -f /home/ubuntu/setupdb.sql"
+
 echo -n "Downloading SDI4Apps libraries ... " ; date
 mkdir -p /data/wwwlibs/jquery /data/www/py /data/www/php /data/www/cgi-bin /data/www/wwwlibs
 cd /data/wwwlibs
@@ -13,7 +25,6 @@ wget --quiet http://packages.sdi4apps.eu/proj4js.tar.xz
 wget --quiet http://packages.sdi4apps.eu/css.tar.xz
 wget --quiet http://packages.sdi4apps.eu/js.tar.xz
 wget --quiet http://packages.sdi4apps.eu/statusmanager.tar.xz
-wget --quiet http://packages.sdi4apps.eu/metadata.tar.xz
 wget --quiet https://github.com/jezekjan/webglayer/releases/download/v1.0.1/webglayer-1.0.1.zip
 wget --quiet http://downloads.sourceforge.net/project/geoserver/GeoServer/2.8.2/geoserver-2.8.2-war.zip
 echo -n "Extracting SDI4Apps libraries ... " ; date
@@ -35,11 +46,66 @@ tar xJf /data/wwwlibs/ext4_sandbox_gray.tar.xz
 echo -n "Installing Layman ... " ; date
 cd /data/www/py
 git clone --quiet https://github.com/CCSS-CZ/layman
+su postgres -c "psql -f /data/www/py/layman/server/laypad/laypad.sql layman"
+cd /data/www/py/layman/server
+mv layman.cgi-template layman.cgi
+mv layman.py-template layman.py
+chmod a+x layman.cgi layman.py
+cat >layman.cfg <<"EOF"
+[Authorization]
+service=Liferay
+url=http://localhost/sso-portlet/service/sso/validate/
+allroles=http://localhost/sso-portlet/service/list/roles/en
+ignoreroles=administrator,guest,lmadmin,organization administrator,organization owner,organization user,owner,power user,site administrator,site member,site owner,user,mickaadmin,mickawrite,poi,user_role
+
+[FileMan]
+homedir=/data/www/py/layman/data/
+
+[LayEd]
+# restrictBy:
+# owner - only my own data and layers are available for reading and writing (plan4business)
+# groups - all the data and layers of all the groups I am member of are available for reading and writing (pprd)
+# this is provisional configuration before this depends on the user's membership in LR groups (lmWriteOwn, lmReadGroup etc.) 
+restrictBy=owner
+
+[DbMan]
+dbname=layman
+dbuser=liferay
+dbhost=localhost
+dbpass=somepass
+dbport=5432
+exposepk=true
+
+[GeoServer]
+url=http://localhost/geoserver/rest
+user=admin
+password=geoserver
+gsdir=/home/ubuntu/liferay-portal-6.2-ce-ga6/tomcat-7.0.62/webapps/geoserver/
+datadir=/home/ubuntu/liferay-portal-6.2-ce-ga6/tomcat-7.0.62/webapps/geoserver/data/
+userpwd=crypt1:2DFyNWnqJIfUL0j8bGMUeA==
+#workspace=
+
+[Gdal]
+gdal_data=/usr/share/gdal/1.10/
+
+[CKAN]
+CkanApiUrl=http://localhost/api/3
+ResourceFormat=shp,kml,json
+
+[PROJ]
+ProjEPSG=/usr/share/proj/epsg
+EOF
 
 #MICKA
 echo -n "Installing MICKA ... " ; date
+cd /data/wwwlibs/
+wget --quiet http://packages.sdi4apps.eu/metadata.tar.xz
 cd /data/www/php
 tar xJf /data/wwwlibs/metadata.tar.xz
+cd /home/ubuntu
+wget --quiet http://packages.sdi4apps.eu/metadata.sql.xz
+unxz metadata.sql.xz
+su postgres -c "psql -f /home/ubuntu/metadata.sql micka"
 
 #HS Layers NG
 echo -n "Installing Layers NG ... " ; date
@@ -222,13 +288,8 @@ openssl req -x509 -newkey rsa:2048 -keyout /etc/apache2/ssl/key.pem -out /etc/ap
 
 LIFERAY_SETUP=geo
 
-cd /home/ubuntu
-# create db user
-cat >/home/ubuntu/setupdb.sql <<"EOF"
-CREATE ROLE liferay NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT LOGIN PASSWORD 'somepass';
-EOF
-su postgres -c "psql -f /home/ubuntu/setupdb.sql"
 
+cd /home/ubuntu
 case "$LIFERAY_SETUP"  in 
  notinstalled)
      # only download
@@ -276,6 +337,7 @@ update virtualhost set hostname='$HOSTNAME';
 update account_ set name='SDI4Apps';
 EOF
 su postgres -c "psql -f /home/ubuntu/setup_portal.sql liferaydb"
+rm /home/ubuntu/setup_portal.sql
 
 # add GeoServer
 echo -n "Installing GeoServer ... " ; date
@@ -339,6 +401,14 @@ service liferay start
 
 #restart Apache to activate forwarding to Liferay
 service apache2 restart
+
+#this is an awfull and dangerous hack ! Change it later.
+# enabling Apache user to write to the geoserver directory
+while [ ! -d /home/ubuntu/liferay-portal-6.2-ce-ga6/tomcat-7.0.62/webapps/geoserver/data ] ; do 
+ echo -n "waiting for deployment of geoserver ..." ; date
+ sleep 5 
+done
+chown -R www-data:www-data /home/ubuntu/liferay-portal-6.2-ce-ga6/tomcat-7.0.62/webapps/geoserver/data
 
 #done, change the Message-Of-The-Day to show it
 cat >/etc/motd <<"EOF"
