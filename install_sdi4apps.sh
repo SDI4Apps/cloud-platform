@@ -106,6 +106,7 @@ cd /home/ubuntu
 wget --quiet http://packages.sdi4apps.eu/metadata.sql.xz
 unxz metadata.sql.xz
 su postgres -c "psql -f /home/ubuntu/metadata.sql micka"
+rm metadata.sql
 
 #HS Layers NG
 echo -n "Installing Layers NG ... " ; date
@@ -313,6 +314,9 @@ EOF
      chmod a+x /home/ubuntu/deploy_portlets.sh
      su - ubuntu -c "/home/ubuntu/deploy_portlets.sh"
      rm portlets.tar.xz
+     # add GeoServer
+     unzip /data/wwwlibs/geoserver-2.8.2-war.zip geoserver.war -d /home/ubuntu/liferay-portal-6.2-ce-ga6/tomcat-7.0.62/webapps/
+     chown ubuntu:ubuntu /home/ubuntu/liferay-portal-6.2-ce-ga6/tomcat-7.0.62/webapps/geoserver.war
      ;;
  geo)
      #configured to display a map
@@ -339,10 +343,6 @@ EOF
 su postgres -c "psql -f /home/ubuntu/setup_portal.sql liferaydb"
 rm /home/ubuntu/setup_portal.sql
 
-# add GeoServer
-echo -n "Installing GeoServer ... " ; date
-unzip /data/wwwlibs/geoserver-2.8.2-war.zip geoserver.war -d /home/ubuntu/liferay-portal-6.2-ce-ga6/tomcat-7.0.62/webapps/
-chown ubuntu:ubuntu /home/ubuntu/liferay-portal-6.2-ce-ga6/tomcat-7.0.62/webapps/geoserver.war
 
 # add Liferay as a service started after boot and start it
 echo -n "Configuring Liferay as service ... " ; date
