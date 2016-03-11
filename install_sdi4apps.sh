@@ -5,6 +5,8 @@ cd /home/ubuntu
 # create db user
 cat >/home/ubuntu/setupdb.sql <<"EOF"
 CREATE ROLE liferay NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT LOGIN PASSWORD 'somepass';
+CREATE DATABASE liferaydb;
+ALTER DATABASE liferaydb OWNER TO liferay;
 CREATE DATABASE layman;
 ALTER DATABASE layman OWNER TO liferay;
 CREATE DATABASE micka;
