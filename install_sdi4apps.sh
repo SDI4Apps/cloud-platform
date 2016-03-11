@@ -95,14 +95,14 @@ a2enmod ssl rewrite proxy_ajp proxy_http headers cgi python
 cat >/etc/apache2/sites-enabled/000-default.conf <<EOF
 <VirtualHost *:80>
   ServerAdmin webmaster@$HOSTNAME
-  RedirectPermanent / https://$HOSTNAME/
-</VirtualHost>
-<VirtualHost *:443>
-   ServerAdmin webmaster@localhost
-
-   SSLEngine on
-   SSLCertificateFile /etc/apache2/ssl/cert.pem
-   SSLCertificateKeyFile /etc/apache2/ssl/key.pem
+#  RedirectPermanent / https://$HOSTNAME/
+#</VirtualHost>
+#<VirtualHost *:443>
+#   ServerAdmin webmaster@localhost
+#
+#   SSLEngine on
+#   SSLCertificateFile /etc/apache2/ssl/cert.pem
+#   SSLCertificateKeyFile /etc/apache2/ssl/key.pem
 
    ScriptAlias /cgi-bin/ /data/www/cgi-bin/
    <Directory "/data/www/cgi-bin">
