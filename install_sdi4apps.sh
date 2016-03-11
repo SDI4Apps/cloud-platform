@@ -333,7 +333,7 @@ EOF
      unxz liferaydb.sql.xz
      echo -n "Importing Liferay database ... " ; date
      su postgres -c "psql -f /home/ubuntu/liferaydb.sql"
-     rm liferaydb.sql
+     #rm liferaydb.sql
      ;;
 esac
 
@@ -344,7 +344,7 @@ update virtualhost set hostname='$HOSTNAME';
 update account_ set name='SDI4Apps';
 EOF
 su postgres -c "psql -f /home/ubuntu/setup_portal.sql liferaydb"
-rm /home/ubuntu/setup_portal.sql
+#rm /home/ubuntu/setup_portal.sql
 
 
 # add Liferay as a service started after boot and start it
