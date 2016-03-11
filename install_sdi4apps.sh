@@ -332,7 +332,7 @@ EOF
      wget --quiet 'http://packages.sdi4apps.eu/liferaydb.sql.xz'
      unxz liferaydb.sql.xz
      echo -n "Importing Liferay database ... " ; date
-     su postgres -c "psql -f /home/ubuntu/liferaydb.sql"
+     su postgres -c "psql -f /home/ubuntu/liferaydb.sql liferaydb"
      #rm liferaydb.sql
      ;;
 esac
