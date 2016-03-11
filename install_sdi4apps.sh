@@ -327,10 +327,11 @@ EOF
      rm liferay-portal-sdi4apps.tar.xz
      # import database for a brand new portal
      echo -n "Downloading Liferay database ... " ; date
-     wget --quiet 'https://acrab.ics.muni.cz/~makub/sdi4apps/liferaydb_sdi4apps.sql'
+     wget --quiet 'http://packages.sdi4apps.eu/liferaydb.sql.xz'
+     unxz liferaydb.sql.xz
      echo -n "Importing Liferay database ... " ; date
-     su postgres -c "psql -f /home/ubuntu/liferaydb_sdi4apps.sql"
-     rm liferaydb_sdi4apps.sql
+     su postgres -c "psql -f /home/ubuntu/liferaydb.sql"
+     rm liferaydb.sql
      ;;
 esac
 
