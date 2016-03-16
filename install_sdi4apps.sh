@@ -312,15 +312,6 @@ case "$LIFERAY_SETUP"  in
      wget --quiet 'https://acrab.ics.muni.cz/~makub/sdi4apps/liferaydb.sql'
      su postgres -c "psql -f /home/ubuntu/liferaydb.sql"
      rm liferaydb.sql
-     #add geo portlets
-     wget --quiet 'http://packages.sdi4apps.eu/portlets.tar.xz' 
-     cat >/home/ubuntu/deploy_portlets.sh <<"EOF"
-cd ~/liferay-portal-6.2-ce-ga6/deploy/
-tar xJf /home/ubuntu/portlets.tar.xz
-EOF
-     chmod a+x /home/ubuntu/deploy_portlets.sh
-     su - ubuntu -c "/home/ubuntu/deploy_portlets.sh"
-     rm portlets.tar.xz
      # add GeoServer
      unzip /data/wwwlibs/geoserver-2.8.2-war.zip geoserver.war -d /home/ubuntu/liferay-portal-6.2-ce-ga6/tomcat-7.0.62/webapps/
      chown ubuntu:ubuntu /home/ubuntu/liferay-portal-6.2-ce-ga6/tomcat-7.0.62/webapps/geoserver.war
@@ -341,6 +332,19 @@ EOF
      #rm liferaydb.sql
      ;;
 esac
+
+#update geo portlets
+if [[ $LIFERAY_SETUP = geo || $LIFERAY_SETUP = notconfigured ]] ; then 
+     cd /home/ubuntu
+     wget --quiet 'http://packages.sdi4apps.eu/portlets.tar.xz' 
+     cat >/home/ubuntu/deploy_portlets.sh <<"EOF"
+cd ~/liferay-portal-6.2-ce-ga6/deploy/
+tar xJf /home/ubuntu/portlets.tar.xz
+EOF
+     chmod a+x /home/ubuntu/deploy_portlets.sh
+     su - ubuntu -c "/home/ubuntu/deploy_portlets.sh"
+     rm portlets.tar.xz
+fi
 
 # set correct hostname for Liferay - needed for correct generated URLs
 echo -n "Setting Liferay hostname ..." ; date
