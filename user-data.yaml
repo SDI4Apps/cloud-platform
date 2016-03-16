@@ -115,6 +115,7 @@ bootcmd:
   - 'echo postfix postfix/mailname string  $(hostname -f) | /usr/bin/debconf-set-selections'
 #install these packages
 packages:
+  - acl
   - ant
   - apache2-mpm-prefork 
   - cgi-mapserver 
@@ -142,6 +143,7 @@ packages:
   - postfix
   - postgresql-9.5-pgrouting
   - python-cssutils 
+  - python-gdal 
   - python-html5lib 
   - python-httplib2 
   - python-lxml 

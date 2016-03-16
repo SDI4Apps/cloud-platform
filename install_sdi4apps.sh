@@ -48,6 +48,11 @@ tar xJf /data/wwwlibs/ext4_sandbox_gray.tar.xz
 echo -n "Installing Layman ... " ; date
 cd /data/www/py
 git clone --quiet https://github.com/CCSS-CZ/layman
+cat >>/data/www/py/layman/server/laypad/laypad.sql <<"EOF"
+GRANT ALL ON DATABASE layman TO liferay;
+GRANT ALL ON SCHEMA layman TO liferay;
+GRANT ALL ON ALL TABLES IN SCHEMA layman TO liferay;
+EOF
 su postgres -c "psql -f /data/www/py/layman/server/laypad/laypad.sql layman"
 cd /data/www/py/layman/server
 mv layman.cgi-template layman.cgi
@@ -411,7 +416,9 @@ while [ ! -d /home/ubuntu/liferay-portal-6.2-ce-ga6/tomcat-7.0.62/webapps/geoser
  echo -n "waiting for deployment of geoserver ..." ; date
  sleep 5 
 done
-chown -R www-data:www-data /home/ubuntu/liferay-portal-6.2-ce-ga6/tomcat-7.0.62/webapps/geoserver/data
+cd /home/ubuntu/liferay-portal-6.2-ce-ga6/tomcat-7.0.62/webapps/geoserver/data
+find -type d -exec setfacl -m u:www-data:rwx -m g:www-data:rwx -d -m u:www-data:rwx -d -m g:www-data:rwx {} \;
+find -type f -exec setfacl -m u:www-data:rwx -m g:www-data:rwx {} \;
 
 #done, change the Message-Of-The-Day to show it
 cat >/etc/motd <<"EOF"
