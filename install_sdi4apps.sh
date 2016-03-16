@@ -271,6 +271,7 @@ cat >/etc/apache2/sites-enabled/000-default.conf <<EOF
    ProxyPass /cgi-bin !
    ProxyPass /icons !
    ProxyPass / ajp://127.0.0.1:8011/
+   ProxyPass /sparql http://localhost:8890/sparql
    <Proxy *>
        AddDefaultCharset off
        Require all granted
@@ -566,6 +567,28 @@ done
 cd /home/ubuntu/liferay-portal-6.2-ce-ga6/tomcat-7.0.62/webapps/geoserver/data
 find -type d -exec setfacl -m u:www-data:rwx -m g:www-data:rwx -d -m u:www-data:rwx -d -m g:www-data:rwx {} \;
 find -type f -exec setfacl -m u:www-data:rwx -m g:www-data:rwx {} \;
+
+#Virtuoso
+cd /tmp
+wget --quiet http://packages.sdi4apps.eu/virtuoso_deb.tar.xz
+tar xJf virtuoso_deb.tar.xz
+cd virtuoso_deb/
+apt-get install -y unixodbc libmono-corlib2.0-cil libmono-system-data2.0-cil libmono-system2.0-cil
+echo virtuoso-opensource-7 virtuoso-opensource-7/dba-password password 'somepass' |  /usr/bin/debconf-set-selections
+echo virtuoso-opensource-7 virtuoso-opensource-7/dba-password-again password 'somepass' |  /usr/bin/debconf-set-selections
+dpkg -i *.deb
+cd /tmp
+wget --quiet http://packages.sdi4apps.eu/virtuoso_data.tar.xz
+tar xJf virtuoso_data.tar.xz
+cd /tmp/rdf
+isql-vt 1111 dba somepass exec="ld_dir ('/tmp/rdf', 'Zemgale_S4a.rdf', 'http://www.sdi4apps.eu/poi.rdf');"
+isql-vt 1111 dba somepass exec="rdf_loader_run(log_enable=>3);"
+isql-vt 1111 dba somepass exec="ld_dir ('/tmp/rdf', 'LV.rdf', 'http://www.sdi4apps.eu/poi.rdf');"
+isql-vt 1111 dba somepass exec="rdf_loader_run(log_enable=>3);"
+isql-vt 1111 dba somepass exec="ld_dir ('/tmp/rdf', 'LV_OSM.rdf', 'http://www.sdi4apps.eu/poi.rdf');"
+isql-vt 1111 dba somepass exec="rdf_loader_run(log_enable=>3);"
+
+
 
 #done, change the Message-Of-The-Day to show it
 cat >/etc/motd <<"EOF"
