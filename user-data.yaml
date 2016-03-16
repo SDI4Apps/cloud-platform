@@ -153,6 +153,7 @@ packages:
   - python-webpy 
   - rsync 
   - subversion 
+  - sqlite3 
   - wget
 #create some users
 users:

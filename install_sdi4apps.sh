@@ -26,7 +26,6 @@ wget --quiet http://packages.sdi4apps.eu/proxy4ows.tar.xz
 wget --quiet http://packages.sdi4apps.eu/proj4js.tar.xz
 wget --quiet http://packages.sdi4apps.eu/css.tar.xz
 wget --quiet http://packages.sdi4apps.eu/js.tar.xz
-wget --quiet http://packages.sdi4apps.eu/statusmanager.tar.xz
 wget --quiet https://github.com/jezekjan/webglayer/releases/download/v1.0.1/webglayer-1.0.1.zip
 wget --quiet http://downloads.sourceforge.net/project/geoserver/GeoServer/2.8.2/geoserver-2.8.2-war.zip
 echo -n "Extracting SDI4Apps libraries ... " ; date
@@ -35,7 +34,6 @@ unzip -o -q ext-4.2.1-gpl.zip
 tar xJf hsproxy.tar.xz
 tar xJf proxy4ows.tar.xz
 tar xJf proj4js.tar.xz
-tar xJf statusmanager.tar.xz
 cd /data/www
 tar xJf /data/wwwlibs/css.tar.xz
 tar xJf /data/wwwlibs/js.tar.xz
@@ -114,6 +112,49 @@ wget --quiet http://packages.sdi4apps.eu/metadata.sql.xz
 unxz metadata.sql.xz
 su postgres -c "psql -f /home/ubuntu/metadata.sql micka"
 rm metadata.sql
+
+#Status manager
+echo -n "Installing status manager ... " ; date
+cd /data/wwwlibs
+wget --quiet http://packages.sdi4apps.eu/statusmanager.tar.xz
+tar xJf statusmanager.tar.xz
+cd /data/wwwlibs/statusmanager
+mv index.php-template index.php
+cat >statusmanager.ini <<"EOF"
+[logging]
+path="./log"
+debug=true
+
+[status]
+session_id="JSESSIONID"
+path="./users"
+namedPath="./users"
+
+[csw]
+url="http://localhost/php/metadata/csw/index.php"
+
+[permalink]
+path="./permalink"
+url="/php/statusmanager/permalink"
+
+[feedback]
+path="/data/wwwlibs/statusmanager/tmp"
+url="/php/statusmanager/tmp/"
+EOF
+patch -b res/HsAuth.php -i - <<"EOF"
+--- res/HsAuth.php      2016-03-07 15:53:03.000000000 +0100
++++ res/HsAuth.php.new  2016-03-16 16:49:17.081323503 +0100
+@@ -1,5 +1,5 @@
+ <?php
+-define("LIFERAY_VALIDATE_URL", "http://liferay.local/g4i-portlet/service");
++define("LIFERAY_VALIDATE_URL", "http://localhost/sso-portlet/service");
+ define("CSW_LOG", __DIR__ . "/../log/");
+ define("ADMINISTRATOR", "Administrator");
+EOF
+cd /data/wwwlibs/statusmanager/data
+sqlite3 data.sqlite <data.sql
+chown www-data:www-data data.sqlite
+
 
 #HS Layers NG
 echo -n "Installing Layers NG ... " ; date
