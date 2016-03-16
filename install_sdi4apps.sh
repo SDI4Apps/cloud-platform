@@ -255,6 +255,108 @@ EOF
 mkdir -p /etc/apache2/ssl
 openssl req -x509 -newkey rsa:2048 -keyout /etc/apache2/ssl/key.pem -out /etc/apache2/ssl/cert.pem -days 3650 -nodes -subj "/CN=$HOSTNAME"
 
+#change PHP config
+patch -b /etc/php5/apache2/php.ini -i - <<"EOF"
+--- php.ini.bck 2016-03-15 15:26:35.997545043 +0100
++++ php.ini 2016-03-16 10:29:26.045730192 +0100
+@@ -209,7 +209,7 @@
+ ; Development Value: Off
+ ; Production Value: Off
+ ; http://php.net/short-open-tag
+-short_open_tag = Off
++short_open_tag = On
+
+ ; Allow ASP-style <% %> tags.
+ ; http://php.net/asp-tags
+@@ -373,7 +373,7 @@
+ ; threat in any way, but it makes it possible to determine whether you use PHP
+ ; on your server or not.
+ ; http://php.net/expose-php
+-expose_php = On
++expose_php = Off
+
+ ;;;;;;;;;;;;;;;;;;;
+ ; Resource Limits ;
+@@ -399,7 +399,7 @@
+ ;max_input_nesting_level = 64
+
+ ; How many GET/POST/COOKIE input variables may be accepted
+-; max_input_vars = 1000
++max_input_vars = 5000
+
+ ; Maximum amount of memory a script may consume (128MB)
+ ; http://php.net/memory-limit
+@@ -459,7 +459,7 @@
+ ; Development Value: E_ALL
+ ; Production Value: E_ALL & ~E_DEPRECATED & ~E_STRICT
+ ; http://php.net/error-reporting
+-error_reporting = E_ALL & ~E_DEPRECATED & ~E_STRICT
++error_reporting = E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT
+
+ ; This directive controls whether or not and where PHP will output errors,
+ ; notices and warnings too. Error output is very useful during development, but
+@@ -476,7 +476,7 @@
+ ; Development Value: On
+ ; Production Value: Off
+ ; http://php.net/display-errors
+-display_errors = Off
++display_errors = On
+
+ ; The display of errors which occur during PHP's startup sequence are handled
+ ; separately from display_errors. PHP's default behavior is to suppress those
+@@ -487,7 +487,7 @@
+ ; Development Value: On
+ ; Production Value: Off
+ ; http://php.net/display-startup-errors
+-display_startup_errors = Off
++display_startup_errors = On
+
+ ; Besides displaying errors, PHP can also log errors to locations such as a
+ ; server-specific log, STDERR, or a location specified by the error_log
+@@ -670,7 +670,7 @@
+ ; Its value may be 0 to disable the limit. It is ignored if POST data reading
+ ; is disabled through enable_post_data_reading.
+ ; http://php.net/post-max-size
+-post_max_size = 8M
++post_max_size = 128M
+
+ ; Automatically add files before PHP document.
+ ; http://php.net/auto-prepend-file
+@@ -690,13 +690,13 @@
+
+ ; PHP's default character set is set to empty.
+ ; http://php.net/default-charset
+-;default_charset = "UTF-8"
++default_charset = "UTF-8"
+
+ ; Always populate the $HTTP_RAW_POST_DATA variable. PHP's default behavior is
+ ; to disable this feature. If post reading is disabled through
+ ; enable_post_data_reading, $HTTP_RAW_POST_DATA is *NOT* populated.
+ ; http://php.net/always-populate-raw-post-data
+-;always_populate_raw_post_data = On
++; always_populate_raw_post_data = 1
+
+ ;;;;;;;;;;;;;;;;;;;;;;;;;
+ ; Paths and Directories ;
+@@ -802,7 +802,7 @@
+
+ ; Maximum allowed size for uploaded files.
+ ; http://php.net/upload-max-filesize
+-upload_max_filesize = 2M
++upload_max_filesize = 100M
+
+ ; Maximum number of files that can be uploaded via a single request
+ max_file_uploads = 20
+@@ -876,7 +876,7 @@
+ [Date]
+ ; Defines the default timezone used by the date functions
+ ; http://php.net/date.timezone
+-;date.timezone =
++date.timezone = Europe/Prague
+
+ ; http://php.net/date.default-latitude
+ ;date.default_latitude = 31.766
+EOF
 
 #Tomcat
 #su ubuntu tomcat7-instance-create /home/ubuntu/tomcat7
