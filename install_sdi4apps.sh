@@ -270,8 +270,8 @@ cat >/etc/apache2/sites-enabled/000-default.conf <<EOF
    ProxyPass /css !
    ProxyPass /cgi-bin !
    ProxyPass /icons !
-   ProxyPass / ajp://127.0.0.1:8011/
    ProxyPass /sparql http://localhost:8890/sparql
+   ProxyPass / ajp://127.0.0.1:8011/
    <Proxy *>
        AddDefaultCharset off
        Require all granted
