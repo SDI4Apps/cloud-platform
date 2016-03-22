@@ -556,10 +556,12 @@ update-rc.d liferay defaults
 service liferay start
 
 #restart Apache to activate forwarding to Liferay
+echo -n "Restarting Apache ... " ; date
 service apache2 restart
 
 #this is an awfull and dangerous hack ! Change it later.
 # enabling Apache user to write to the geoserver directory
+echo -n "Enabling www-data to write to Geoserver ... " ; date
 while [ ! -d /home/ubuntu/liferay-portal-6.2-ce-ga6/tomcat-7.0.62/webapps/geoserver/data ] ; do 
  echo -n "waiting for deployment of geoserver ..." ; date
  sleep 5 
@@ -569,6 +571,7 @@ find -type d -exec setfacl -m u:www-data:rwx -m g:www-data:rwx -d -m u:www-data:
 find -type f -exec setfacl -m u:www-data:rwx -m g:www-data:rwx {} \;
 
 #Virtuoso
+echo -n "Installing Virtuoso ... " ; date
 cd /tmp
 wget --quiet http://packages.sdi4apps.eu/virtuoso_deb.tar.xz
 tar xJf virtuoso_deb.tar.xz
@@ -616,6 +619,7 @@ cat >/etc/motd <<"EOF"
        - Proxy4ows
        - Statusmanager
        - Tomcat 7
+       - Virtuoso 7.2
        - JavaScript libraries
          - ExtJS 4.2.1
          - jQuery 1.12.0
