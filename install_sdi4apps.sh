@@ -27,7 +27,7 @@ wget --quiet http://packages.sdi4apps.eu/proj4js.tar.xz
 wget --quiet http://packages.sdi4apps.eu/css.tar.xz
 wget --quiet http://packages.sdi4apps.eu/js.tar.xz
 wget --quiet https://github.com/jezekjan/webglayer/releases/download/v1.0.1/webglayer-1.0.1.zip
-wget --quiet http://downloads.sourceforge.net/project/geoserver/GeoServer/2.8.2/geoserver-2.8.2-war.zip
+wget --quiet http://downloads.sourceforge.net/project/geoserver/GeoServer/2.7.6/geoserver-2.7.6-war.zip
 echo -n "Extracting SDI4Apps libraries ... " ; date
 #JS libs in /data/wwwlibs
 unzip -o -q ext-4.2.1-gpl.zip
@@ -457,7 +457,7 @@ case "$LIFERAY_SETUP"  in
      su postgres -c "psql -f /home/ubuntu/liferaydb.sql"
      rm liferaydb.sql
      # add GeoServer
-     unzip /data/wwwlibs/geoserver-2.8.2-war.zip geoserver.war -d /home/ubuntu/liferay-portal-6.2-ce-ga6/tomcat-7.0.62/webapps/
+     unzip /data/wwwlibs/geoserver-2.7.6-war.zip geoserver.war -d /home/ubuntu/liferay-portal-6.2-ce-ga6/tomcat-7.0.62/webapps/
      chown ubuntu:ubuntu /home/ubuntu/liferay-portal-6.2-ce-ga6/tomcat-7.0.62/webapps/geoserver.war
      ;;
  geo)
