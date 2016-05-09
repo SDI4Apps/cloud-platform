@@ -1,0 +1,104 @@
+#cloud-config
+#create files
+write_files:
+  - path: /etc/motd # ASCII art displayed when someone logs in on terminal
+    content: |1
+        This is the SDI4Apps platform
+        ____  ____ ___ _  _     _
+       / ___||  _ \_ _| || |   / \   _ __  _ __  ___
+       \___ \| | | | || || |_ / _ \ |  _ \|  _ \/ __|
+        ___) | |_| | ||__   _/ ___ \| |_) | |_) \__ \
+       |____/|____/___|  |_|/_/   \_\  __/|  __/|___/
+                                    |_|   |_|
+
+       SDI4Apps platform installation is in progress now. Please wait.
+       It takes approximately 10 minutes. You can watch the progress
+       by issuing the following command:
+
+       tail -f /var/log/cloud-init-output.log
+
+       and wait for the following line to appear: "The SDI4Apps platform installation was completed"
+  - path: /etc/apt/apt.conf.d/50unattended-upgrades
+    content: |1
+     Unattended-Upgrade::Allowed-Origins {
+        "${distro_id}:${distro_codename}";
+        "${distro_id}:${distro_codename}-security";
+        "${distro_id}:${distro_codename}-updates";
+     };
+     Unattended-Upgrade::Mail "root";
+     Unattended-Upgrade::MailOnlyOnError "true";
+     Unattended-Upgrade::Remove-Unused-Dependencies "true";
+     Unattended-Upgrade::Automatic-Reboot "true";
+     Unattended-Upgrade::Automatic-Reboot-Time "02:00";
+
+#add software repositories 
+apt_sources:
+  - source: "ppa:webupd8team/java"    # Oracle Java PPA (add-apt-repository ppa:webupd8team/java)
+  - source: "ppa:ubuntugis/ubuntugis-unstable" # UbuntuGIS PPA
+#update packages to latest versions
+apt_update: True
+#apt_upgrade: True
+# Agreement with Oracle licence before packages are installed
+# setting up Postfix SMTP server for outgoing email
+bootcmd:
+  - 'echo oracle-java7-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections'
+  - 'echo postfix postfix/main_mailer_type select Internet Site | /usr/bin/debconf-set-selections'
+  - 'echo postfix postfix/mailname string  $(hostname -f) | /usr/bin/debconf-set-selections'
+#install these packages
+packages:
+  - acl
+  - ant
+  - cgi-mapserver 
+  - gdal-bin 
+  - htop
+  - libapache2-mod-php7.0
+  - libapache2-mod-python 
+  - mailutils
+  - nodejs 
+  - npm 
+  - ntp
+  - oracle-java7-installer
+  - oracle-java7-unlimited-jce-policy
+  - oracle-java7-set-default
+  - php7.0
+  - php7.0-curl 
+  - php7.0-mysql 
+  - php7.0-pgsql 
+  - php7.0-sqlite 
+  - php7.0-xsl
+  - phppgadmin
+  - postgis
+  - postfix
+  - postgresql-9.5-pgrouting
+  - python-cssutils 
+  - python-gdal 
+  - python-html5lib 
+  - python-httplib2 
+  - python-lxml 
+  - python-psycopg2 
+  - python-pycurl 
+  - python-pyproj 
+  - python-webpy 
+  - subversion 
+  - sqlite3 
+  - wget
+#create some users
+users:
+  #creates default user named "ubuntu" (as specified in /etc/cloud/cloud.cfg)
+  - default
+  #add another user
+  - name: makub
+    gecos: Martin Kuba
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    shell: /bin/bash
+    ssh-authorized-keys:
+      - ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAtv24kBxvFCiDAUxQvsYEaIoWdU+QVgcWU1q4uJ8Ngy+LKn6XIVQTKlWd9W7MPUgpL5jPHVgExN1vpH+UlS0cducDUCRVB3JU4fW8jXge/JEhqhfrwKMD/iE0DJ0k2Zxd8pyIway1Q2KYs5tqQTJcQX3FsJ2V86pDFeLYmisRTFbo4n0wog20euPYCuTAY0KlA8mkOb/WXUcLICgT3O6Tvp9Vyez1P1eHT1DW7dkeu5hqal08raXNGwF9+xvo2oHzstTSHl/juXS+gmiI1Y4VqRiR0C6Euy/MBX4ywyOi/Fm8r9qxcvYaULsy/k8KudNjipL5KQxd/xKpw2Azs7fbbw== makub@acrab.ics.muni.cz
+#aad the following ssh keys to the first specified user
+ssh_authorized_keys:
+  - ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAtv24kBxvFCiDAUxQvsYEaIoWdU+QVgcWU1q4uJ8Ngy+LKn6XIVQTKlWd9W7MPUgpL5jPHVgExN1vpH+UlS0cducDUCRVB3JU4fW8jXge/JEhqhfrwKMD/iE0DJ0k2Zxd8pyIway1Q2KYs5tqQTJcQX3FsJ2V86pDFeLYmisRTFbo4n0wog20euPYCuTAY0KlA8mkOb/WXUcLICgT3O6Tvp9Vyez1P1eHT1DW7dkeu5hqal08raXNGwF9+xvo2oHzstTSHl/juXS+gmiI1Y4VqRiR0C6Euy/MBX4ywyOi/Fm8r9qxcvYaULsy/k8KudNjipL5KQxd/xKpw2Azs7fbbw== makub@acrab.ics.muni.cz
+# run script that installs SDI4Apps software
+runcmd:
+ - 'wget --quiet https://raw.githubusercontent.com/SDI4Apps/cloud-platform/master/install_sdi4apps.sh -O /tmp/install_sdi4apps.sh'
+ - 'bash /tmp/install_sdi4apps.sh'
+#final message
+final_message: "The SDI4Apps platform installation was completed after $UPTIME seconds"
