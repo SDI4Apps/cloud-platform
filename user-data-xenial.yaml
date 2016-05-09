@@ -82,6 +82,8 @@ packages:
   - subversion 
   - sqlite3 
   - wget
+  - unixodbc #Virtuoso dependencies
+  - mono-reference-assemblies-2.0
 #create some users
 users:
   #creates default user named "ubuntu" (as specified in /etc/cloud/cloud.cfg)
@@ -98,7 +100,7 @@ ssh_authorized_keys:
   - ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAtv24kBxvFCiDAUxQvsYEaIoWdU+QVgcWU1q4uJ8Ngy+LKn6XIVQTKlWd9W7MPUgpL5jPHVgExN1vpH+UlS0cducDUCRVB3JU4fW8jXge/JEhqhfrwKMD/iE0DJ0k2Zxd8pyIway1Q2KYs5tqQTJcQX3FsJ2V86pDFeLYmisRTFbo4n0wog20euPYCuTAY0KlA8mkOb/WXUcLICgT3O6Tvp9Vyez1P1eHT1DW7dkeu5hqal08raXNGwF9+xvo2oHzstTSHl/juXS+gmiI1Y4VqRiR0C6Euy/MBX4ywyOi/Fm8r9qxcvYaULsy/k8KudNjipL5KQxd/xKpw2Azs7fbbw== makub@acrab.ics.muni.cz
 # run script that installs SDI4Apps software
 runcmd:
- - 'wget --quiet https://raw.githubusercontent.com/SDI4Apps/cloud-platform/master/install_sdi4apps.sh -O /tmp/install_sdi4apps.sh'
+ - 'wget --quiet https://raw.githubusercontent.com/SDI4Apps/cloud-platform/master/install_sdi4apps_xenial.sh -O /tmp/install_sdi4apps.sh'
  - 'bash /tmp/install_sdi4apps.sh'
 #final message
 final_message: "The SDI4Apps platform installation was completed after $UPTIME seconds"
