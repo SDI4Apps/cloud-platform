@@ -1,6 +1,8 @@
 #!/bin/bash
 
-#make sure services are started
+#make sure services are started 
+# see https://bugs.launchpad.net/cloud-init/+bug/1576692 and https://bugs.launchpad.net/ubuntu/+source/init-system-helpers/+bug/1575572
+# should be fixed in init-system-helpers - 1.32ubuntu1
 for SERVICE in ntp postgresql fail2ban ; do
   echo -n "state of service $SERVICE ... "
   if ! systemctl is-active $SERVICE ; then systemctl start $SERVICE ; fi
