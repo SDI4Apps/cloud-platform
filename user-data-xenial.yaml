@@ -35,6 +35,39 @@ write_files:
 apt_sources:
   - source: "ppa:webupd8team/java"    # Oracle Java PPA (add-apt-repository ppa:webupd8team/java)
   - source: "ppa:ubuntugis/ubuntugis-unstable" # UbuntuGIS PPA
+  - source: 'deb http://packages.comsode.eu/debian jessie main' # Open Data Node repository
+    filename: odn.list
+    key: |
+      ----BEGIN PGP PUBLIC KEY BLOCK-----
+      Version: GnuPG v1.4.12 (GNU/Linux)
+      
+      mQENBFSzhn0BCACz6AzI4L4wSerczlwq4lX4cq6BFEKxH8wPiQRx0jH7mbk6rM1v
+      HnV5/iLS78jcYuXFZ2vs1GMueioOI+52WhOlZ1nqmXtm9ID43uZUUeeCHUBGgy33
+      yrluPqvG5x9pEsaM5ziJNJVjIdodYnMBSPgTPYNsF/9skkpRc18hVchKWaVtYVNT
+      gvMAJMGTjyZ9ha9A+Qd3TU2E7qg/KTqQH0L3oQXKyAekxhZJ4JVmZ7N/1TA95dtr
+      ZNXiTu1CF0Z9yrlNhvY8YXh8Xe7oxeFki6MO7qbgkj+mwbUKiomlGXRHzOtgDEzO
+      f3uxnePB+T6QTD22fj6swI6NUg4wwjYqTvAxABEBAAG0HkphbiBNYXJjZWsgPGph
+      bi5tYXJjZWtAZWVhLnNrPokBPgQTAQIAKAUCVLOGfQIbAwUJA8JnAAYLCQgHAwIG
+      FQgCCQoLBBYCAwECHgECF4AACgkQLQOMPLy92WsJcwf8DTdtDRctp7wbV83bstWs
+      zQjBNyh+mXJE3qqcRziGC92f69MxtpeuOn40E5i3ui1rsiuCYHjkKLdJZLc6NWPW
+      pCVJkM0Ia6NDHNVn6quMX76LbKiyHiKfnF+4d83tvuD+Bc+Af83uqMWW4XwhgSNx
+      Wr+VEvWWxWNcGE0GvpskWeKIlHdIUDAQywMaYInXLAi9CeyH2QjGNXX/01duaubb
+      lJ6Jf77i9lkF4cb66mRTpiEw1NYTRPKPpezaTV/ZP7HUH5gVruMs/elCORV1NQcB
+      Ar/ZVIjf8FXqACZIvVMBjlMjgJeu0KzSARmiyl2QAcECB4nd5qvsAWlWGZDSmyra
+      krkBDQRUs4Z9AQgAw/q6T4JkutqE3KfHRgjN6Qst8Lr8VoXMP3B/5p3+Jfi0Pk9e
+      G96oMvdSNPkR+1Cm2nRqRPyWP9ofZ4wsKcLyEUOsz/lqnX02d8XBXvI86ePnP5FG
+      ZCNvWBlMdvzZLVJjhS1kPVJ9OQwfG+5vhzdE8vFooWLClsOvzh16f3lxEeRjHS+V
+      Xeeko9c/NNPXOjqBreP6smFakk3i/lZZCqg842QKampeCrEnf8rgT1VlCRBbsOzx
+      pb6RWqPrd9JpmjwaHHIvFkITD6JaximBIvvyU3AN+irUdZ40Cuvh7CGJwXusqfmQ
+      7qAWC4T3pjvM0zj+nQ93veZf3SuURLjOT5xmWQARAQABiQElBBgBAgAPBQJUs4Z9
+      AhsMBQkDwmcAAAoJEC0DjDy8vdlrKl4H/iTeyNnWgYMrDsisrjEPvSWoSfa41HEJ
+      deYZ2x7rFxIvAoAxBQiv0fhS+U3A+SCS65hwh8Dj4BuT3rqpwNpbxsnguJtck2YX
+      nOlCmBei4LSswjXqzPKmwygN+kotwRjaYQihpTlX+lBZprKrvoYoMqdhfkKth9+T
+      qd+NVj/nzoyFEpGL9GVl6DeA63izrPlyns2TEFm3eOkRyj7JRkzJ+5T50imU3URB
+      y49KzXIJlVb1SSVppO5mY0bzY8VH7b6R9C4UOvc7wO+IEDZdum8uvuTk2oD2VKNo
+      cPUyF1ErD0FmRCiCq7OzdX+VYwKzg7UdPSmO55BSmot/rHbrsCKp9Tk=
+      =AxsG
+      -----END PGP PUBLIC KEY BLOCK-----
 #update packages to latest versions
 apt_update: True
 #apt_upgrade: True
@@ -81,8 +114,9 @@ packages:
   - python-webpy 
   - subversion 
   - sqlite3 
-  - unixodbc #Virtuoso dependencies
-  - mono-reference-assemblies-2.0
+  - virtuoso-opensource
+#  - unixodbc #Virtuoso dependencies
+#  - mono-reference-assemblies-2.0
 #create some users
 users:
   #creates default user named "ubuntu" (as specified in /etc/cloud/cloud.cfg)
