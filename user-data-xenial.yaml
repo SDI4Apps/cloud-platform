@@ -46,9 +46,9 @@ bootcmd:
   - 'echo postfix postfix/mailname string  $(hostname -f) | /usr/bin/debconf-set-selections'
 #install these packages
 packages:
-  - acl
   - ant
   - cgi-mapserver 
+  - fail2ban
   - gdal-bin 
   - htop
   - libapache2-mod-php7.0
@@ -81,7 +81,6 @@ packages:
   - python-webpy 
   - subversion 
   - sqlite3 
-  - wget
   - unixodbc #Virtuoso dependencies
   - mono-reference-assemblies-2.0
 #create some users
