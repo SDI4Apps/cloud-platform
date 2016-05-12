@@ -523,8 +523,8 @@ find -type f -exec setfacl -m u:www-data:rwx -m g:www-data:rwx {} \;
 
 #Virtuoso
 echo -n "Installing Virtuoso ... " ; date
-#echo virtuoso-opensource-7 virtuoso-opensource-7/dba-password password 'somepass' |  /usr/bin/debconf-set-selections
-#echo virtuoso-opensource-7 virtuoso-opensource-7/dba-password-again password 'somepass' |  /usr/bin/debconf-set-selections
+echo virtuoso-opensource-7 virtuoso-opensource-7/dba-password password 'dba' |  /usr/bin/debconf-set-selections
+echo virtuoso-opensource-7 virtuoso-opensource-7/dba-password-again password 'dba' |  /usr/bin/debconf-set-selections
 echo "deb http://packages.comsode.eu/debian jessie main" >/etc/apt/sources.list.d/odn.list
 wget --quiet -O - http://packages.comsode.eu/key/odn.gpg.key | apt-key add -
 apt-get update
@@ -559,12 +559,12 @@ cat >/etc/motd <<"EOF"
                                     |_|   |_|
 
        It provides the following software:
-       - Apache 2.4 + PHP 
-       - Geoserver 2.8.2
+       - Apache 2.4 + PHP 7.0
+       - Geoserver 2.7.6
        - HSProxy 
        - LayMan
        - Liferay 6.2 GA6
-       - MapServer 6.4.2
+       - MapServer 7.0
        - MICKA
        - Oracle Java 7
        - pgRouting
