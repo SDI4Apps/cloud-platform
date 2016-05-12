@@ -522,25 +522,23 @@ find -type d -exec setfacl -m u:www-data:rwx -m g:www-data:rwx -d -m u:www-data:
 find -type f -exec setfacl -m u:www-data:rwx -m g:www-data:rwx {} \;
 
 #Virtuoso
-# echo -n "Installing Virtuoso ... " ; date
-# cd /tmp
-# wget --quiet http://packages.sdi4apps.eu/virtuoso_deb.tar.xz
-# tar xJf virtuoso_deb.tar.xz
-# cd virtuoso_deb/
-# apt-get install -y unixodbc libmono-corlib2.0-cil libmono-system-data2.0-cil libmono-system2.0-cil
-# echo virtuoso-opensource-7 virtuoso-opensource-7/dba-password password 'somepass' |  /usr/bin/debconf-set-selections
-# echo virtuoso-opensource-7 virtuoso-opensource-7/dba-password-again password 'somepass' |  /usr/bin/debconf-set-selections
-# dpkg -i *.deb
-# cd /tmp
-# wget --quiet http://packages.sdi4apps.eu/virtuoso_data.tar.xz
-# tar xJf virtuoso_data.tar.xz
-# cd /tmp/rdf
-# isql-vt 1111 dba somepass exec="ld_dir ('/tmp/rdf', 'Zemgale_S4a.rdf', 'http://www.sdi4apps.eu/poi.rdf');"
-# isql-vt 1111 dba somepass exec="rdf_loader_run(log_enable=>3);"
-# isql-vt 1111 dba somepass exec="ld_dir ('/tmp/rdf', 'LV.rdf', 'http://www.sdi4apps.eu/poi.rdf');"
-# isql-vt 1111 dba somepass exec="rdf_loader_run(log_enable=>3);"
-# isql-vt 1111 dba somepass exec="ld_dir ('/tmp/rdf', 'LV_OSM.rdf', 'http://www.sdi4apps.eu/poi.rdf');"
-# isql-vt 1111 dba somepass exec="rdf_loader_run(log_enable=>3);"
+echo -n "Installing Virtuoso ... " ; date
+echo virtuoso-opensource-7 virtuoso-opensource-7/dba-password password 'somepass' |  /usr/bin/debconf-set-selections
+echo virtuoso-opensource-7 virtuoso-opensource-7/dba-password-again password 'somepass' |  /usr/bin/debconf-set-selections
+echo "deb http://packages.comsode.eu/debian jessie main" >/etc/apt/sources.list.d/odn.list
+wget -O - http://packages.comsode.eu/key/odn.gpg.key | apt-key add -
+apt-get update
+apt-get install -y virtuoso-opensource
+cd /tmp
+wget --quiet http://packages.sdi4apps.eu/virtuoso_data.tar.xz
+tar xJf virtuoso_data.tar.xz
+cd /tmp/rdf
+isql-vt 1111 dba somepass exec="ld_dir ('/tmp/rdf', 'Zemgale_S4a.rdf', 'http://www.sdi4apps.eu/poi.rdf');"
+isql-vt 1111 dba somepass exec="rdf_loader_run(log_enable=>3);"
+isql-vt 1111 dba somepass exec="ld_dir ('/tmp/rdf', 'LV.rdf', 'http://www.sdi4apps.eu/poi.rdf');"
+isql-vt 1111 dba somepass exec="rdf_loader_run(log_enable=>3);"
+isql-vt 1111 dba somepass exec="ld_dir ('/tmp/rdf', 'LV_OSM.rdf', 'http://www.sdi4apps.eu/poi.rdf');"
+isql-vt 1111 dba somepass exec="rdf_loader_run(log_enable=>3);"
 
 
 
