@@ -526,9 +526,14 @@ echo -n "Installing Virtuoso ... " ; date
 echo virtuoso-opensource-7 virtuoso-opensource-7/dba-password password 'somepass' |  /usr/bin/debconf-set-selections
 echo virtuoso-opensource-7 virtuoso-opensource-7/dba-password-again password 'somepass' |  /usr/bin/debconf-set-selections
 echo "deb http://packages.comsode.eu/debian jessie main" >/etc/apt/sources.list.d/odn.list
-wget -O - http://packages.comsode.eu/key/odn.gpg.key | apt-key add -
+wget --quiet -O - http://packages.comsode.eu/key/odn.gpg.key | apt-key add -
 apt-get update
 apt-get install -y virtuoso-opensource
+#workaround for systemd problem with installing services during boot
+for SERVICE in virtuoso-opensource-7 ; do
+  echo -n "state of service $SERVICE ... "
+  if ! systemctl is-active $SERVICE ; then systemctl start $SERVICE ; fi
+done
 cd /tmp
 wget --quiet http://packages.sdi4apps.eu/virtuoso_data.tar.xz
 tar xJf virtuoso_data.tar.xz
