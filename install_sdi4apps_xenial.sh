@@ -523,8 +523,8 @@ find -type f -exec setfacl -m u:www-data:rwx -m g:www-data:rwx {} \;
 
 #Virtuoso
 echo -n "Installing Virtuoso ... " ; date
-echo virtuoso-opensource-7 virtuoso-opensource-7/dba-password password 'somepass' |  /usr/bin/debconf-set-selections
-echo virtuoso-opensource-7 virtuoso-opensource-7/dba-password-again password 'somepass' |  /usr/bin/debconf-set-selections
+#echo virtuoso-opensource-7 virtuoso-opensource-7/dba-password password 'somepass' |  /usr/bin/debconf-set-selections
+#echo virtuoso-opensource-7 virtuoso-opensource-7/dba-password-again password 'somepass' |  /usr/bin/debconf-set-selections
 echo "deb http://packages.comsode.eu/debian jessie main" >/etc/apt/sources.list.d/odn.list
 wget --quiet -O - http://packages.comsode.eu/key/odn.gpg.key | apt-key add -
 apt-get update
@@ -535,15 +535,16 @@ for SERVICE in virtuoso-opensource-7 ; do
   if ! systemctl is-active $SERVICE ; then systemctl start $SERVICE ; fi
 done
 cd /tmp
+#load some data into Virtuoso
 wget --quiet http://packages.sdi4apps.eu/virtuoso_data.tar.xz
 tar xJf virtuoso_data.tar.xz
 cd /tmp/rdf
-isql-vt 1111 dba somepass exec="ld_dir ('/tmp/rdf', 'Zemgale_S4a.rdf', 'http://www.sdi4apps.eu/poi.rdf');"
-isql-vt 1111 dba somepass exec="rdf_loader_run(log_enable=>3);"
-isql-vt 1111 dba somepass exec="ld_dir ('/tmp/rdf', 'LV.rdf', 'http://www.sdi4apps.eu/poi.rdf');"
-isql-vt 1111 dba somepass exec="rdf_loader_run(log_enable=>3);"
-isql-vt 1111 dba somepass exec="ld_dir ('/tmp/rdf', 'LV_OSM.rdf', 'http://www.sdi4apps.eu/poi.rdf');"
-isql-vt 1111 dba somepass exec="rdf_loader_run(log_enable=>3);"
+isql-vt 1111 dba dba exec="ld_dir ('/tmp/rdf', 'Zemgale_S4a.rdf', 'http://www.sdi4apps.eu/poi.rdf');"
+isql-vt 1111 dba dba exec="rdf_loader_run(log_enable=>3);"
+isql-vt 1111 dba dba exec="ld_dir ('/tmp/rdf', 'LV.rdf', 'http://www.sdi4apps.eu/poi.rdf');"
+isql-vt 1111 dba dba exec="rdf_loader_run(log_enable=>3);"
+isql-vt 1111 dba dba exec="ld_dir ('/tmp/rdf', 'LV_OSM.rdf', 'http://www.sdi4apps.eu/poi.rdf');"
+isql-vt 1111 dba dba exec="rdf_loader_run(log_enable=>3);"
 
 
 
