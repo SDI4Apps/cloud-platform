@@ -178,6 +178,7 @@ EOF
 sed -i -e 's/bower --allow-root/bower --allow-root --silent/' package.json
 npm config set loglevel warn
 npm install --unsafe-perm
+git rev-parse origin/master >gitsha.js
 
 # well known URLs
 echo -n "Setting symbolic links in /data/www/wwwlibs ... " ; date
