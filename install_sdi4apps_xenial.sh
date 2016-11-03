@@ -178,7 +178,7 @@ EOF
 sed -i -e 's/bower --allow-root/bower --allow-root --silent/' package.json
 npm config set loglevel warn
 npm install --unsafe-perm
-git rev-parse origin/master >gitsha.js
+git rev-parse HEAD^ > gitsha.js
 
 # well known URLs
 echo -n "Setting symbolic links in /data/www/wwwlibs ... " ; date
@@ -521,6 +521,21 @@ done
 cd /home/ubuntu/liferay-portal-6.2-ce-ga6/tomcat-7.0.62/webapps/geoserver/data
 find -type d -exec setfacl -m u:www-data:rwx -m g:www-data:rwx -d -m u:www-data:rwx -d -m g:www-data:rwx {} \;
 find -type f -exec setfacl -m u:www-data:rwx -m g:www-data:rwx {} \;
+
+#Install SensLog
+cd /home/ubuntu
+wget --quiet 'http://packages.sdi4apps.eu/SensLog.sql.xz'
+tar xJf SensLog.sql.xz
+su postgres -c "psql -f /home/ubuntu/SensLog.sql"
+rm SensLog.sql.xz
+rm SensLog.sql
+wget --quiet 'http://packages.sdi4apps.eu/SensLog.tar.xz'
+cd /home/ubuntu/liferay-portal-6.2-ce-ga6/tomcat-7.0.62/webapps/
+tar xJf /home/ubuntu/SensLog.tar.xz
+chown ubuntu:ubuntu /home/ubuntu/liferay-portal-6.2-ce-ga6/tomcat-7.0.62/webapps/SensLog.war
+cd /home/ubuntu
+rm SensLog.tar.xz
+
 
 #Virtuoso
 echo -n "Installing Virtuoso ... " ; date
