@@ -11,14 +11,14 @@ See the following sections to see how to launch it on various clouds:
 ## Amazon AWS
 
 In the **Step 3**  of [Launch Wizard](https://eu-west-1.console.aws.amazon.com/ec2/v2/home?region=eu-west-1#LaunchInstanceWizard:),
-click on **Advanced Details**, then in the section **User Data** click **As file** and upload the file user-data.yaml.
+when launching Ubuntu 16.04, click on **Advanced Details**, then in the section **User Data** click **As file** and upload the file user-data-xenial.yaml.
 
 
 ## CERIT-SC OpenNebula
 
-Log into [OpenNebula web interface](https://cloud.metacentrum.cz/). Instantiate the template 3508 "SDI4Apps platform (4 CPU) VNC".
+Log into [OpenNebula web interface](https://cloud.metacentrum.cz/). Instantiate the template 3717 "SDI4Apps platform 16.04 Xenial".
 
-It can be also submitted from command line.  Download the files user-data.yaml, authenticate, then run  *launch_on_ceritsc.sh*.
+It can be also submitted from command line.  Download the files user-data-xenial.yaml, authenticate, then run  *launch_on_ceritsc.sh*.
 
 ### Setup for CERIT-SC OpenNebula Command Line
 
@@ -57,7 +57,7 @@ export ONE_XMLRPC=$ONE_HOST:6443/RPC2
 
 Must be submitted from command line. 
 
-Download the files user-data.yaml and launch_on_google_ce.sh, run the script.
+Download the files user-data-xenial.yaml and launch_on_google_ce.sh, run the script.
 
 ### Setup for Google Computing Engine
 

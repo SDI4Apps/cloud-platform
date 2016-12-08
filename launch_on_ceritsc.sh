@@ -2,7 +2,7 @@
 
 USER_DATA_FILE=user-data.yaml
 CONTEXT_FILE=/tmp/ctx.$$
-TEMPLATE_ID=3507
+TEMPLATE_ID=3717
 
 export ONE_HOST=https://cloud.metacentrum.cz
 export ONE_XMLRPC=$ONE_HOST:6443/RPC2
