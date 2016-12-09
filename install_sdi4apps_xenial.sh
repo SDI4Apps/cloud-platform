@@ -585,7 +585,7 @@ cat >/etc/motd <<"EOF"
        - Oracle Java 7
        - pgRouting
        - phpPgAdmin
-       - PostgreSQL 9.5
+       - PostgreSQL 9.6
        - PostGIS 
        - Proxy4ows
        - Statusmanager
