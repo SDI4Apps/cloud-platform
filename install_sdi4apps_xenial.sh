@@ -128,6 +128,7 @@ wget --quiet http://packages.sdi4apps.eu/statusmanager.tar.xz
 tar xJf statusmanager.tar.xz
 cd /data/wwwlibs/statusmanager
 mv index.php-template index.php
+mkdir tmp
 cat >statusmanager.ini <<"EOF"
 [logging]
 path="./log"
@@ -149,19 +150,19 @@ url="/php/statusmanager/permalink"
 path="/data/wwwlibs/statusmanager/tmp"
 url="/php/statusmanager/tmp/"
 EOF
-patch -b res/HsAuth.php -i - <<"EOF"
---- res/HsAuth.php      2016-03-07 15:53:03.000000000 +0100
-+++ res/HsAuth.php.new  2016-03-16 16:49:17.081323503 +0100
-@@ -1,5 +1,5 @@
- <?php
--define("LIFERAY_VALIDATE_URL", "http://liferay.local/g4i-portlet/service");
-+define("LIFERAY_VALIDATE_URL", "http://localhost/sso-portlet/service");
- define("CSW_LOG", __DIR__ . "/../log/");
- define("ADMINISTRATOR", "Administrator");
-EOF
+#patch -b res/HsAuth.php -i - <<"EOF"
+#--- res/HsAuth.php      2016-03-07 15:53:03.000000000 +0100
+#+++ res/HsAuth.php.new  2016-03-16 16:49:17.081323503 +0100
+#@@ -1,5 +1,5 @@
+# <?php
+#-define("LIFERAY_VALIDATE_URL", "http://liferay.local/g4i-portlet/service");
+#+define("LIFERAY_VALIDATE_URL", "http://localhost/sso-portlet/service");
+# define("CSW_LOG", __DIR__ . "/../log/");
+# define("ADMINISTRATOR", "Administrator");
+#EOF
 cd /data/wwwlibs/statusmanager/data
 sqlite3 data.sqlite <data.sql
-chown www-data:www-data data.sqlite
+chown www-data:www-data /data/wwwlibs/statusmanager -R
 
 
 #HS Layers NG
@@ -179,6 +180,29 @@ sed -i -e 's/bower --allow-root/bower --allow-root --silent/' package.json
 npm config set loglevel warn
 npm install --unsafe-perm
 git rev-parse HEAD^ > gitsha.js
+
+#proxy4ows
+echo -n "Installing proxy4ows ... " ; date
+cd /data/wwwlibs/proxy4ows
+mv proxy4ows.cgi-template proxy4ows.cgi
+cat >config.cfg <<"EOF"
+[Proxy4OWS]
+cachedir=/tmp/
+logging=DEBUG
+owslib=/home/jachym/usr/src/owslib/OWSLib/
+
+[MapServer]
+name=proxy4ows
+tempdir=/tmp/
+errorfile=stderr
+imagepath=/data/www/php/tmp/
+onlineresource=http://localhost/cgi-bin/proxy4ows.cgi
+#onlineresource=http://cloud255-170.cerit-sc.cz/cgi-bin/proxy4ows.cgi
+srs=EPSG:4326 EPSG:102067 EPSG:900913 EPSG:3035 EPSG:3857 EPSG:900913
+EOF
+mkdir /data/www/php/tmp
+chown www-data:www-data /data/www/php/tmp
+chmod 755 /data/www/php/tmp
 
 # well known URLs
 echo -n "Setting symbolic links in /data/www/wwwlibs ... " ; date
@@ -588,6 +612,7 @@ cat >/etc/motd <<"EOF"
        - PostgreSQL 9.6
        - PostGIS 
        - Proxy4ows
+	   - SensLog
        - Statusmanager
        - Tomcat 7
        - Virtuoso 7.2

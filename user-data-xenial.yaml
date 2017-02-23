@@ -144,10 +144,13 @@ packages:
   - python-gdal 
   - python-html5lib 
   - python-httplib2 
-  - python-lxml 
+  - python-lxml
+  - python-mapscript 
+  - python-owslib
   - python-psycopg2 
   - python-pycurl 
   - python-pyproj 
+  - python-requests
   - python-webpy 
   - subversion 
   - sqlite3 
