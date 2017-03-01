@@ -177,6 +177,7 @@ cat >/root/.bowerrc <<"EOF"
 {"interactive": false}
 EOF
 sed -i -e 's/bower --allow-root/bower --allow-root --silent/' package.json
+npm install -g npm@next
 npm config set loglevel warn
 npm install --unsafe-perm
 git rev-parse HEAD^ > gitsha.js
