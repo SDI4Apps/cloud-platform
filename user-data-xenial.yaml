@@ -12,7 +12,7 @@ write_files:
                                     |_|   |_|
 
        SDI4Apps platform installation is in progress now. Please wait.
-       It takes approximately 10 minutes. You can watch the progress
+       It takes some time. You can watch the progress
        by issuing the following command:
 
        tail -f /var/log/cloud-init-output.log
