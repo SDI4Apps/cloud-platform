@@ -226,6 +226,7 @@ ln -s /usr/share/phppgadmin pma #phpPgAdmin
 #set ownership - dangerous, change later !
 cd /data/www
 chown -R www-data:www-data .
+#set hsproxy
 chown www-data:www-data /data/wwwlibs/hsproxy/lib/hsproxy.py
 chmod 555 /data/wwwlibs/hsproxy/lib/hsproxy.py
 
