@@ -613,7 +613,7 @@ cat >/etc/motd <<"EOF"
        - PostgreSQL 9.6
        - PostGIS 
        - Proxy4ows
-	   - SensLog
+       - SensLog
        - Statusmanager
        - Tomcat 7
        - Virtuoso 7.2
