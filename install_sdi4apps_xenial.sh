@@ -226,6 +226,8 @@ ln -s /usr/share/phppgadmin pma #phpPgAdmin
 #set ownership - dangerous, change later !
 cd /data/www
 chown -R www-data:www-data .
+chown www-data:www-data /data/wwlibs/hsproxy/lib/hsproxy.py
+chmod 555 /data/wwlibs/hsproxy/lib/hsproxy.py
 
 #get public hostname 
 echo -n "Getting public hostname ... " ; date
