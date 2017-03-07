@@ -418,6 +418,7 @@ EOF
 # notconfigured - installed, with database, with geo portlets, not set up
 # geo - installed, with portlets, set up to display a map
 
+echo -n "Installing Liferay ..." ; date
 LIFERAY_SETUP=geo
 
 
