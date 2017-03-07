@@ -25,16 +25,27 @@ su postgres -c "psql -f /home/ubuntu/setupdb.sql"
 echo -n "Downloading SDI4Apps libraries ... " ; date
 mkdir -p /data/wwwlibs/jquery /data/www/py /data/www/php /data/www/cgi-bin /data/www/wwwlibs
 cd /data/wwwlibs
+echo -n "Downloading hsl_ng_bower.tar.xz ... " ; date
 wget --quiet http://packages.sdi4apps.eu/hsl_ng_bower.tar.xz
+echo -n "Downloading hsl_ng_node.tar.xz ... " ; date
 wget --quiet http://packages.sdi4apps.eu/hsl_ng_node.tar.xz
+echo -n "Downloading ext-4.2.1-gpl.zip ... " ; date
 wget --quiet http://cdn.sencha.com/ext/gpl/ext-4.2.1-gpl.zip
+echo -n "Downloading ext4_sandbox_gray.tar.xz ... " ; date
 wget --quiet http://packages.sdi4apps.eu/ext4_sandbox_gray.tar.xz
+echo -n "Downloading hsproxy.tar.xz ... " ; date
 wget --quiet http://packages.sdi4apps.eu/hsproxy.tar.xz
+echo -n "Downloading proxy4ows.tar.xz ... " ; date
 wget --quiet http://packages.sdi4apps.eu/proxy4ows.tar.xz
+echo -n "Downloading proj4js.tar.xz ... " ; date
 wget --quiet http://packages.sdi4apps.eu/proj4js.tar.xz
+echo -n "Downloading css.tar.xz ... " ; date
 wget --quiet http://packages.sdi4apps.eu/css.tar.xz
+echo -n "Downloading js.tar.xz ... " ; date
 wget --quiet http://packages.sdi4apps.eu/js.tar.xz
+echo -n "Downloading webglayer-1.0.1.zip ... " ; date
 wget --quiet https://github.com/jezekjan/webglayer/releases/download/v1.0.1/webglayer-1.0.1.zip
+echo -n "Downloading geoserver-2.7.6-war.zip ... " ; date
 wget --quiet http://downloads.sourceforge.net/project/geoserver/GeoServer/2.7.6/geoserver-2.7.6-war.zip
 echo -n "Extracting SDI4Apps libraries ... " ; date
 #JS libs in /data/wwwlibs
@@ -552,14 +563,20 @@ find -type d -exec setfacl -m u:www-data:rwx -m g:www-data:rwx -d -m u:www-data:
 find -type f -exec setfacl -m u:www-data:rwx -m g:www-data:rwx {} \;
 
 #Install SensLog
+echo -n "Installing SensLog ... " ; date
 cd /home/ubuntu
+echo -n "Downloading SensLog.sql.xz ... " ; date
 wget --quiet 'http://packages.sdi4apps.eu/SensLog.sql.xz'
+echo -n "Extracting SensLog.sql.xz ... " ; date
 tar xJf SensLog.sql.xz
+echo -n "Importing SensLog.sql ... " ; date
 su postgres -c "psql -f /home/ubuntu/SensLog.sql"
 rm SensLog.sql.xz
 rm SensLog.sql
+echo -n "Downloading SensLog.tar.xz ... " ; date
 wget --quiet 'http://packages.sdi4apps.eu/SensLog.tar.xz'
 cd /home/ubuntu/liferay-portal-6.2-ce-ga6/tomcat-7.0.62/webapps/
+echo -n "Extracting SensLog.tar.xz ... " ; date
 tar xJf /home/ubuntu/SensLog.tar.xz
 chown ubuntu:ubuntu /home/ubuntu/liferay-portal-6.2-ce-ga6/tomcat-7.0.62/webapps/SensLog.war
 cd /home/ubuntu
