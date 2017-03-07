@@ -26,27 +26,27 @@ echo -n "Downloading SDI4Apps libraries ... " ; date
 mkdir -p /data/wwwlibs/jquery /data/www/py /data/www/php /data/www/cgi-bin /data/www/wwwlibs
 cd /data/wwwlibs
 echo -n "Downloading hsl_ng_bower.tar.xz ... " ; date
-wget --quiet http://packages.sdi4apps.eu/hsl_ng_bower.tar.xz
+wget --inet4-only  --quiet http://packages.sdi4apps.eu/hsl_ng_bower.tar.xz
 echo -n "Downloading hsl_ng_node.tar.xz ... " ; date
-wget --quiet http://packages.sdi4apps.eu/hsl_ng_node.tar.xz
+wget --inet4-only  --quiet http://packages.sdi4apps.eu/hsl_ng_node.tar.xz
 echo -n "Downloading ext-4.2.1-gpl.zip ... " ; date
-wget --quiet http://cdn.sencha.com/ext/gpl/ext-4.2.1-gpl.zip
+wget --inet4-only  --quiet http://cdn.sencha.com/ext/gpl/ext-4.2.1-gpl.zip
 echo -n "Downloading ext4_sandbox_gray.tar.xz ... " ; date
-wget --quiet http://packages.sdi4apps.eu/ext4_sandbox_gray.tar.xz
+wget --inet4-only  --quiet http://packages.sdi4apps.eu/ext4_sandbox_gray.tar.xz
 echo -n "Downloading hsproxy.tar.xz ... " ; date
-wget --quiet http://packages.sdi4apps.eu/hsproxy.tar.xz
+wget --inet4-only  --quiet http://packages.sdi4apps.eu/hsproxy.tar.xz
 echo -n "Downloading proxy4ows.tar.xz ... " ; date
-wget --quiet http://packages.sdi4apps.eu/proxy4ows.tar.xz
+wget --inet4-only  --quiet http://packages.sdi4apps.eu/proxy4ows.tar.xz
 echo -n "Downloading proj4js.tar.xz ... " ; date
-wget --quiet http://packages.sdi4apps.eu/proj4js.tar.xz
+wget --inet4-only  --quiet http://packages.sdi4apps.eu/proj4js.tar.xz
 echo -n "Downloading css.tar.xz ... " ; date
-wget --quiet http://packages.sdi4apps.eu/css.tar.xz
+wget --inet4-only  --quiet http://packages.sdi4apps.eu/css.tar.xz
 echo -n "Downloading js.tar.xz ... " ; date
-wget --quiet http://packages.sdi4apps.eu/js.tar.xz
+wget --inet4-only  --quiet http://packages.sdi4apps.eu/js.tar.xz
 echo -n "Downloading webglayer-1.0.1.zip ... " ; date
-wget --quiet https://github.com/jezekjan/webglayer/releases/download/v1.0.1/webglayer-1.0.1.zip
+wget --inet4-only  --quiet https://github.com/jezekjan/webglayer/releases/download/v1.0.1/webglayer-1.0.1.zip
 echo -n "Downloading geoserver-2.7.6-war.zip ... " ; date
-wget --quiet http://downloads.sourceforge.net/project/geoserver/GeoServer/2.7.6/geoserver-2.7.6-war.zip
+wget --inet4-only  --quiet http://downloads.sourceforge.net/project/geoserver/GeoServer/2.7.6/geoserver-2.7.6-war.zip
 echo -n "Extracting SDI4Apps libraries ... " ; date
 #JS libs in /data/wwwlibs
 unzip -o -q ext-4.2.1-gpl.zip
@@ -57,7 +57,7 @@ cd /data/www
 tar xJf /data/wwwlibs/css.tar.xz
 tar xJf /data/wwwlibs/js.tar.xz
 cd /data/wwwlibs/jquery
-wget --quiet http://code.jquery.com/jquery-1.12.0.min.js
+wget --inet4-only  --quiet http://code.jquery.com/jquery-1.12.0.min.js
 cd /data/wwwlibs/ext-4.2.1.883/resources
 tar xJf /data/wwwlibs/ext4_sandbox_gray.tar.xz
 
@@ -123,11 +123,11 @@ EOF
 #MICKA
 echo -n "Installing MICKA ... " ; date
 cd /data/wwwlibs/
-wget --quiet http://packages.sdi4apps.eu/metadata.tar.xz
+wget --inet4-only  --quiet http://packages.sdi4apps.eu/metadata.tar.xz
 cd /data/www/php
 tar xJf /data/wwwlibs/metadata.tar.xz
 cd /home/ubuntu
-wget --quiet http://packages.sdi4apps.eu/metadata.sql.xz
+wget --inet4-only  --quiet http://packages.sdi4apps.eu/metadata.sql.xz
 unxz metadata.sql.xz
 su postgres -c "psql -f /home/ubuntu/metadata.sql micka"
 rm metadata.sql
@@ -135,7 +135,7 @@ rm metadata.sql
 #Status manager
 echo -n "Installing status manager ... " ; date
 cd /data/wwwlibs
-wget --quiet http://packages.sdi4apps.eu/statusmanager.tar.xz
+wget --inet4-only  --quiet http://packages.sdi4apps.eu/statusmanager.tar.xz
 tar xJf statusmanager.tar.xz
 cd /data/wwwlibs/statusmanager
 mv index.php-template index.php
@@ -437,15 +437,15 @@ cd /home/ubuntu
 case "$LIFERAY_SETUP"  in 
  notinstalled)
      # only download
-     wget --quiet -O liferay-portal-tomcat-6.2-ce-ga6-20160112152609836.zip http://sourceforge.net/projects/lportal/files/Liferay%20Portal/6.2.5%20GA6/liferay-portal-tomcat-6.2-ce-ga6-20160112152609836.zip/download
+     wget --inet4-only  --quiet -O liferay-portal-tomcat-6.2-ce-ga6-20160112152609836.zip http://sourceforge.net/projects/lportal/files/Liferay%20Portal/6.2.5%20GA6/liferay-portal-tomcat-6.2-ce-ga6-20160112152609836.zip/download
      ;;
  notconfigured)
      # download installed and packed Liferay
-     wget --quiet 'https://acrab.ics.muni.cz/~makub/sdi4apps/liferay-portal-6.2-ce-ga6.tar.xz'
+     wget --inet4-only  --quiet 'https://acrab.ics.muni.cz/~makub/sdi4apps/liferay-portal-6.2-ce-ga6.tar.xz'
      tar xJf liferay-portal-6.2-ce-ga6.tar.xz
      rm liferay-portal-6.2-ce-ga6.tar.xz
      # import database for a brand new portal
-     wget --quiet 'https://acrab.ics.muni.cz/~makub/sdi4apps/liferaydb.sql'
+     wget --inet4-only  --quiet 'https://acrab.ics.muni.cz/~makub/sdi4apps/liferaydb.sql'
      su postgres -c "psql -f /home/ubuntu/liferaydb.sql"
      rm liferaydb.sql
      # add GeoServer
@@ -455,13 +455,13 @@ case "$LIFERAY_SETUP"  in
  geo)
      #configured to display a map
      echo -n "Downloading Liferay ... " ; date
-     wget --quiet 'https://acrab.ics.muni.cz/~makub/sdi4apps/liferay-portal-sdi4apps.tar.xz'
+     wget --inet4-only  --quiet 'https://acrab.ics.muni.cz/~makub/sdi4apps/liferay-portal-sdi4apps.tar.xz'
      echo -n "Extracting Liferay ... " ; date
      tar xJf liferay-portal-sdi4apps.tar.xz
      rm liferay-portal-sdi4apps.tar.xz
      # import database for a brand new portal
      echo -n "Downloading Liferay database ... " ; date
-     wget --quiet 'http://packages.sdi4apps.eu/liferaydb.sql.xz'
+     wget --inet4-only  --quiet 'http://packages.sdi4apps.eu/liferaydb.sql.xz'
      unxz liferaydb.sql.xz
      echo -n "Importing Liferay database ... " ; date
      su postgres -c "psql -f /home/ubuntu/liferaydb.sql liferaydb"
@@ -472,7 +472,7 @@ esac
 #update geo portlets
 if [[ $LIFERAY_SETUP = geo || $LIFERAY_SETUP = notconfigured ]] ; then 
      cd /home/ubuntu
-     wget --quiet 'http://packages.sdi4apps.eu/portlets.tar.xz' 
+     wget --inet4-only  --quiet 'http://packages.sdi4apps.eu/portlets.tar.xz' 
      cat >/home/ubuntu/deploy_portlets.sh <<"EOF"
 cd ~/liferay-portal-6.2-ce-ga6/deploy/
 tar xJf /home/ubuntu/portlets.tar.xz
@@ -566,7 +566,7 @@ find -type f -exec setfacl -m u:www-data:rwx -m g:www-data:rwx {} \;
 echo -n "Installing SensLog ... " ; date
 cd /home/ubuntu
 echo -n "Downloading SensLog.sql.xz ... " ; date
-wget --quiet 'http://packages.sdi4apps.eu/SensLog.sql.xz'
+wget --inet4-only  --quiet 'http://packages.sdi4apps.eu/SensLog.sql.xz'
 echo -n "Extracting SensLog.sql.xz ... " ; date
 tar xJf SensLog.sql.xz
 echo -n "Importing SensLog.sql ... " ; date
@@ -574,7 +574,7 @@ su postgres -c "psql -f /home/ubuntu/SensLog.sql"
 rm SensLog.sql.xz
 rm SensLog.sql
 echo -n "Downloading SensLog.tar.xz ... " ; date
-wget --quiet 'http://packages.sdi4apps.eu/SensLog.tar.xz'
+wget --inet4-only  --quiet 'http://packages.sdi4apps.eu/SensLog.tar.xz'
 cd /home/ubuntu/liferay-portal-6.2-ce-ga6/tomcat-7.0.62/webapps/
 echo -n "Extracting SensLog.tar.xz ... " ; date
 tar xJf /home/ubuntu/SensLog.tar.xz
@@ -588,7 +588,7 @@ echo -n "Installing Virtuoso ... " ; date
 echo virtuoso-opensource-7 virtuoso-opensource-7/dba-password password 'dba' |  /usr/bin/debconf-set-selections
 echo virtuoso-opensource-7 virtuoso-opensource-7/dba-password-again password 'dba' |  /usr/bin/debconf-set-selections
 echo "deb http://packages.comsode.eu/debian jessie main" >/etc/apt/sources.list.d/odn.list
-wget --quiet -O - http://packages.comsode.eu/key/odn.gpg.key | apt-key add -
+wget --inet4-only  --quiet -O - http://packages.comsode.eu/key/odn.gpg.key | apt-key add -
 apt-get update
 apt-get install -y virtuoso-opensource
 #workaround for systemd problem with installing services during boot
@@ -598,8 +598,11 @@ for SERVICE in virtuoso-opensource-7 ; do
 done
 cd /tmp
 #load some data into Virtuoso
-wget --quiet http://packages.sdi4apps.eu/virtuoso_data.tar.xz
+echo -n "Downloading virtuoso_data.tar.xz ... " ; date
+wget --inet4-only  --quiet http://packages.sdi4apps.eu/virtuoso_data.tar.xz
+echo -n "Extracting virtuoso_data.tar.xz ... " ; date
 tar xJf virtuoso_data.tar.xz
+echo -n "Importing virtuoso_data.tar.xz ... " ; date
 cd /tmp/rdf
 isql-vt 1111 dba dba exec="ld_dir ('/tmp/rdf', 'Zemgale_S4a.rdf', 'http://www.sdi4apps.eu/poi.rdf');"
 isql-vt 1111 dba dba exec="rdf_loader_run(log_enable=>3);"
