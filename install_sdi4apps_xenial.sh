@@ -30,7 +30,7 @@ wget --inet4-only  --quiet http://packages.sdi4apps.eu/hsl_ng_bower.tar.xz
 echo -n "Downloading hsl_ng_node.tar.xz ... " ; date
 wget --inet4-only  --quiet http://packages.sdi4apps.eu/hsl_ng_node.tar.xz
 echo -n "Downloading ext-4.2.1-gpl.zip ... " ; date
-wget --inet4-only  --quiet http://cdn.sencha.com/ext/gpl/ext-4.2.1-gpl.zip
+wget --quiet http://cdn.sencha.com/ext/gpl/ext-4.2.1-gpl.zip
 echo -n "Downloading ext4_sandbox_gray.tar.xz ... " ; date
 wget --inet4-only  --quiet http://packages.sdi4apps.eu/ext4_sandbox_gray.tar.xz
 echo -n "Downloading hsproxy.tar.xz ... " ; date
@@ -44,9 +44,9 @@ wget --inet4-only  --quiet http://packages.sdi4apps.eu/css.tar.xz
 echo -n "Downloading js.tar.xz ... " ; date
 wget --inet4-only  --quiet http://packages.sdi4apps.eu/js.tar.xz
 echo -n "Downloading webglayer-1.0.1.zip ... " ; date
-wget --inet4-only  --quiet https://github.com/jezekjan/webglayer/releases/download/v1.0.1/webglayer-1.0.1.zip
+wget --quiet https://github.com/jezekjan/webglayer/releases/download/v1.0.1/webglayer-1.0.1.zip
 echo -n "Downloading geoserver-2.7.6-war.zip ... " ; date
-wget --inet4-only  --quiet http://downloads.sourceforge.net/project/geoserver/GeoServer/2.7.6/geoserver-2.7.6-war.zip
+wget --quiet http://downloads.sourceforge.net/project/geoserver/GeoServer/2.7.6/geoserver-2.7.6-war.zip
 echo -n "Extracting SDI4Apps libraries ... " ; date
 #JS libs in /data/wwwlibs
 unzip -o -q ext-4.2.1-gpl.zip
@@ -57,7 +57,7 @@ cd /data/www
 tar xJf /data/wwwlibs/css.tar.xz
 tar xJf /data/wwwlibs/js.tar.xz
 cd /data/wwwlibs/jquery
-wget --inet4-only  --quiet http://code.jquery.com/jquery-1.12.0.min.js
+wget --quiet http://code.jquery.com/jquery-1.12.0.min.js
 cd /data/wwwlibs/ext-4.2.1.883/resources
 tar xJf /data/wwwlibs/ext4_sandbox_gray.tar.xz
 
@@ -437,7 +437,7 @@ cd /home/ubuntu
 case "$LIFERAY_SETUP"  in 
  notinstalled)
      # only download
-     wget --inet4-only  --quiet -O liferay-portal-tomcat-6.2-ce-ga6-20160112152609836.zip http://sourceforge.net/projects/lportal/files/Liferay%20Portal/6.2.5%20GA6/liferay-portal-tomcat-6.2-ce-ga6-20160112152609836.zip/download
+     wget --quiet -O liferay-portal-tomcat-6.2-ce-ga6-20160112152609836.zip http://sourceforge.net/projects/lportal/files/Liferay%20Portal/6.2.5%20GA6/liferay-portal-tomcat-6.2-ce-ga6-20160112152609836.zip/download
      ;;
  notconfigured)
      # download installed and packed Liferay
@@ -588,7 +588,7 @@ echo -n "Installing Virtuoso ... " ; date
 echo virtuoso-opensource-7 virtuoso-opensource-7/dba-password password 'dba' |  /usr/bin/debconf-set-selections
 echo virtuoso-opensource-7 virtuoso-opensource-7/dba-password-again password 'dba' |  /usr/bin/debconf-set-selections
 echo "deb http://packages.comsode.eu/debian jessie main" >/etc/apt/sources.list.d/odn.list
-wget --inet4-only  --quiet -O - http://packages.comsode.eu/key/odn.gpg.key | apt-key add -
+wget --quiet -O - http://packages.comsode.eu/key/odn.gpg.key | apt-key add -
 apt-get update
 apt-get install -y virtuoso-opensource
 #workaround for systemd problem with installing services during boot
