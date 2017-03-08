@@ -46,7 +46,7 @@ wget --inet4-only  --quiet http://packages.sdi4apps.eu/js.tar.xz
 echo -n "Downloading webglayer-1.0.1.zip ... " ; date
 wget --quiet https://github.com/jezekjan/webglayer/releases/download/v1.0.1/webglayer-1.0.1.zip
 echo -n "Downloading geoserver-2.7.6-war.zip ... " ; date
-wget --quiet http://downloads.sourceforge.net/project/geoserver/GeoServer/2.7.6/geoserver-2.7.6-war.zip
+wget --inet4-only  --quiet http://packages.sdi4apps.eu/geoserver-2.7.6-war.zip
 echo -n "Extracting SDI4Apps libraries ... " ; date
 #JS libs in /data/wwwlibs
 unzip -o -q ext-4.2.1-gpl.zip
