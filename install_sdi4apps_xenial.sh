@@ -611,7 +611,8 @@ isql-vt 1111 dba dba exec="rdf_loader_run(log_enable=>3);"
 isql-vt 1111 dba dba exec="ld_dir ('/tmp/rdf', 'LV_OSM.rdf', 'http://www.sdi4apps.eu/poi.rdf');"
 isql-vt 1111 dba dba exec="rdf_loader_run(log_enable=>3);"
 
-
+#(re)start postfix
+/etc/init.d/postfix restart
 
 #done, change the Message-Of-The-Day to show it
 cat >/etc/motd <<"EOF"
