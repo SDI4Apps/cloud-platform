@@ -25,10 +25,10 @@ su postgres -c "psql -f /home/ubuntu/setupdb.sql"
 echo -n "Downloading SDI4Apps libraries ... " ; date
 mkdir -p /data/wwwlibs/jquery /data/www/py /data/www/php /data/www/cgi-bin /data/www/wwwlibs
 cd /data/wwwlibs
-echo -n "Downloading hsl_ng_bower.tar.xz ... " ; date
-wget --inet4-only  --quiet http://packages.sdi4apps.eu/hsl_ng_bower.tar.xz
-echo -n "Downloading hsl_ng_node.tar.xz ... " ; date
-wget --inet4-only  --quiet http://packages.sdi4apps.eu/hsl_ng_node.tar.xz
+#echo -n "Downloading hsl_ng_bower.tar.xz ... " ; date
+#wget --inet4-only  --quiet http://packages.sdi4apps.eu/hsl_ng_bower.tar.xz
+#echo -n "Downloading hsl_ng_node.tar.xz ... " ; date
+#wget --inet4-only  --quiet http://packages.sdi4apps.eu/hsl_ng_node.tar.xz
 echo -n "Downloading ext-4.2.1-gpl.zip ... " ; date
 wget --quiet http://cdn.sencha.com/ext/gpl/ext-4.2.1-gpl.zip
 echo -n "Downloading ext4_sandbox_gray.tar.xz ... " ; date
@@ -182,8 +182,8 @@ cd /data/wwwlibs
 ln -s /usr/bin/nodejs /usr/bin/node
 git clone --quiet https://github.com/hslayers/hslayers-ng.git
 cd hslayers-ng
-tar xJf /data/wwwlibs/hsl_ng_bower.tar.xz
-tar xJf /data/wwwlibs/hsl_ng_node.tar.xz
+#tar xJf /data/wwwlibs/hsl_ng_bower.tar.xz
+#tar xJf /data/wwwlibs/hsl_ng_node.tar.xz
 cat >/root/.bowerrc <<"EOF"
 {"interactive": false}
 EOF
