@@ -182,6 +182,7 @@ cd /data/wwwlibs
 ln -s /usr/bin/nodejs /usr/bin/node
 git clone --quiet https://github.com/hslayers/hslayers-ng.git
 cd hslayers-ng
+git reset --hard 2aac3feb3f8acff47426da41f3879c44672396ad
 #tar xJf /data/wwwlibs/hsl_ng_bower.tar.xz
 #tar xJf /data/wwwlibs/hsl_ng_node.tar.xz
 cat >/root/.bowerrc <<"EOF"
