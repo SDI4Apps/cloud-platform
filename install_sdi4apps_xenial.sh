@@ -138,29 +138,30 @@ cd /data/wwwlibs
 wget --inet4-only  --quiet http://packages.sdi4apps.eu/statusmanager.tar.xz
 tar xJf statusmanager.tar.xz
 cd /data/wwwlibs/statusmanager
-mv index.php-template index.php
+#mv index.php-template index.php
 mkdir tmp
-cat >statusmanager.ini <<"EOF"
-[logging]
-path="./log"
-debug=true
+mkdir permalink
+# cat >statusmanager.ini <<"EOF"
+# [logging]
+# path="./log"
+# debug=true
 
-[status]
-session_id="JSESSIONID"
-path="./users"
-namedPath="./users"
+# [status]
+# session_id="JSESSIONID"
+# path="./users"
+# namedPath="./users"
 
-[csw]
-url="http://localhost/php/metadata/csw/index.php"
+# [csw]
+# url="http://localhost/php/metadata/csw/index.php"
 
-[permalink]
-path="./permalink"
-url="/php/statusmanager/permalink"
+# [permalink]
+# path="./permalink"
+# url="/php/statusmanager/permalink"
 
-[feedback]
-path="/data/wwwlibs/statusmanager/tmp"
-url="/php/statusmanager/tmp/"
-EOF
+# [feedback]
+# path="/data/wwwlibs/statusmanager/tmp"
+# url="/php/statusmanager/tmp/"
+# EOF
 #patch -b res/HsAuth.php -i - <<"EOF"
 #--- res/HsAuth.php      2016-03-07 15:53:03.000000000 +0100
 #+++ res/HsAuth.php.new  2016-03-16 16:49:17.081323503 +0100
