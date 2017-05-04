@@ -131,6 +131,12 @@ wget --inet4-only  --quiet http://packages.sdi4apps.eu/metadata.sql.xz
 unxz metadata.sql.xz
 su postgres -c "psql -f /home/ubuntu/metadata.sql micka"
 rm metadata.sql
+cat >/etc/cron.daily/update-micka-services <<"EOF"
+#!/bin/sh
+
+/usr/bin/php /data/www/php/metadata/include/harvest/alive.php hide=1 report=/data/www/php/metadata/reports/alive.html
+EOF
+chmod 755 /etc/cron.daily/update-micka-services
 
 #Status manager
 echo -n "Installing status manager ... " ; date
